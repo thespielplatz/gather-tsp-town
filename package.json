@@ -1,0 +1,25 @@
+{
+  "name": "gather-tsp-town",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thespielplatz/gather-tsp-town.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thespielplatz/gather-tsp-town/issues"
+  },
+  "homepage": "https://github.com/thespielplatz/gather-tsp-town#readme",
+  "dependencies": {
+    "@gathertown/gather-game-client": "32.0.0",
+    "isomorphic-ws": "^4.0.1",
+    "ws": "^8.2.1"
+  }
+}
