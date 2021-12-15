@@ -14,6 +14,7 @@ class LightningScreen {
         this.db = db;
         this.objId = objId;
         this.lastInteractionId = undefined;
+        this.lastCounter = 0;
 
         // Init DB
         if (db.get("lightning").value() === undefined) {
@@ -21,6 +22,7 @@ class LightningScreen {
         }
 
         this.app.get('/pages/lightning', (req, res) => {
+            console.log(self.lastInteractionId);
             let footerText = "Who are you?";
             if (self.lastInteractionId !== undefined) {
                 footerText = `Hi ${self.gather.getPlayer(self.lastInteractionId).name}!`;
@@ -32,7 +34,11 @@ class LightningScreen {
                 playerId: self.lastInteractionId
             });
 
-            self.lastInteractionId = undefined;
+            if (this.lastCounter > 0) {
+              this.lastCounter--;
+            } else {
+              self.lastInteractionId = undefined;
+            }
         });
 
         this.app.get('/api/lightning', (req, res) => {
@@ -68,6 +74,7 @@ class LightningScreen {
 
         this.gather.subscribeToPlayerInteracts(objId, (playerId, player) => {
             this.lastInteractionId = playerId;
+            this.lastCounter = 1;
         });
     }
 }
