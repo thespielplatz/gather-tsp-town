@@ -19,7 +19,11 @@
   "homepage": "https://github.com/thespielplatz/gather-tsp-town#readme",
   "dependencies": {
     "@gathertown/gather-game-client": "32.0.0",
+    "express": "^4.17.1",
+    "express-favicon": "^2.0.1",
     "isomorphic-ws": "^4.0.1",
+    "qr-image": "^3.2.0",
+    "stormdb": "^0.5.2",
     "ws": "^8.2.1"
   }
 }

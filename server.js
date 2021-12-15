@@ -1,6 +1,3 @@
-const NO_EXECUTION = process.argv.includes('--noexec');
-console.log(NO_EXECUTION);
-
 const PORT = 2222;
 
 let NAME = require('./package.json').name;
@@ -48,62 +45,33 @@ app.use((req, res, next) => {
 
 // Default Route
 app.get('/', (req, res) => {
-  res.render("main", { title: NAME, 'version' : VERSION });
+  res.render("title", { title: NAME, 'message' : VERSION });
 });
 
-
-// Shutdown
-
-// Require child_process
-var exec = require('child_process').exec;
-
-app.get('/api/shutdown', (req, res) => {
-  if (NO_EXECUTION) {
-    res.json({ status: "NO_EXECUTION" }).end();
-    return;
-  }
-
-  // Reboot computer
-  exec('shutdown now', (error, stdout, stderr) => {
-    console.log("error");
-    console.log(error);
-    console.log("stdout");
-    console.log(stdout);
-    console.log("stderr");
-    console.log(stderr);
-
-    if (error !== null) {
-      res.json({ status: "error", message: stderr }).end();
-      return;
-    }
-
-    res.json({ status: "ok", message: stderr }).end();
-  });
-});
-
-app.get('/api/getip', (req, res) => {
-  if (NO_EXECUTION) {
-    res.json({ status: "NO_EXECUTION" }).end();
-    return;
-  }
-
-  // Reboot computer
-  exec('hostname -I', (error, stdout, stderr) => {
-    if (stderr) {
-      res.json({ status: "error", message: stderr }).end();
-      return;
-    }
-
-    res.json({ status: "ok", message: stdout }).end();
-  });
+app.get('/api/ping', (req, res) => {
+  res.json({ status: "ok", message: "pong" }).end();
 });
 
 // Add 404
-app.use((req, res, next) => {
-  res.status(404).render("error", { title: "404", 'message' : `Page not found 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>` });
-});
+const add404 = () => {
+  app.use((req, res, next) => {
+    res.status(404).render("error", { title: "404", 'message' : `Page not found 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>` });
+  });
+}
 
-app.listen(PORT, () => { // Listen on port 3000
-  console.log(`Listening on ${PORT}`); // Log when listen success
-})
+const start = (callback) => {
+  add404();
 
+  app.listen(PORT, () => { // Listen on port 3000
+    console.log(`Listening on ${PORT}`); // Log when listen success
+
+    if (callback != undefined) {
+      callback();
+    }
+  });
+}
+
+module.exports = {
+  app: app,
+  start
+}

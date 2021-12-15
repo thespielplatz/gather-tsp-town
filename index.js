@@ -1,28 +1,19 @@
-const { API_KEY, SPACE_ID, ROOM_ID } = require("./config.js");
-const { Game } = require("@gathertown/gather-game-client");
-global.WebSocket = require("isomorphic-ws");
+const server = require('./server');
+const {name, version} = require("./package.json");
+const app = server.app;
+const db = require('./db.js');
+const Gather = require('./gather');
+const gather = new Gather();
 
-/**** setup ****/
+const LightningScreen = require('./logic/lightningscreen')
 
-// what's going on here is better explained in the docs:
-// https://gathertown.notion.site/Gather-Websocket-API-bf2d5d4526db412590c3579c36141063
-const game = new Game(() => Promise.resolve({ apiKey: API_KEY }));
-game.connect(SPACE_ID); // replace with your spaceId of choice
-game.subscribeToConnection((connected) => console.log("connected?", connected));
-
-/**** the good stuff ****/
-
-game.subscribeToEvent("playerMoves", (data, context) => {
-    /*
-    console.log(
-        context?.player?.name ?? context.playerId,
-        "moved in direction",
-        data.playerMoves.direction
-    );*/
-    console.log(JSON.stringify(data));
-    game.setName(`Fil (${data.playerMoves.x}, ${data.playerMoves.y})`)
+app.get('/ping', (req, res) => {
+    res.json("pong").end();
 });
 
-game.subscribeToEvent("playerInteracts", (data, context) => {
-    console.log(JSON.stringify(data));
+const ls = new LightningScreen(app, gather, db, "KWM4F5HtsYYx8-UDKw2Et_60c1358a-0f17-4d0a-9aba-228808aca38e");
+
+server.start(() => {
+    console.log("go!");
 });
+

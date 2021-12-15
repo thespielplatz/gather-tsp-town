@@ -89,7 +89,7 @@
     </div>
 </div>
 <div class="logo-overlay">
-    <img class="img-responsive" width="70" height="40" src="static/img/tsp_70x112.png" alt="TheSpielplatz" scale="0">
+    <img class="img-responsive" width="70" height="40" src="/static/img/tsp_70x112.png" alt="TheSpielplatz" scale="0">
 </div>
 <!--
 <script src="js/scripts.js"></script>
