@@ -22,7 +22,6 @@ class LightningScreen {
         }
 
         this.app.get('/pages/lightning', (req, res) => {
-            console.log(self.lastInteractionId);
             let footerText = "Who are you?";
             if (self.lastInteractionId !== undefined) {
                 footerText = `Hi ${self.gather.getPlayer(self.lastInteractionId).name}!`;
@@ -30,15 +29,22 @@ class LightningScreen {
 
             res.render("lightning", { title: 'Lightning Wallet',
                 footerText: footerText,
-                objId: objId,
-                playerId: self.lastInteractionId
+                objId: objId
             });
+        });
 
-            if (this.lastCounter > 0) {
-              this.lastCounter--;
-            } else {
-              self.lastInteractionId = undefined;
+        this.app.get('/api/lightning/getplayer', (req, res) => {
+            if (self.lastInteractionId === undefined) {
+                res.json({ status: "noplayer" }).end();
+                return;
             }
+
+            res.json({
+                status: "ok",
+                playerId: self.lastInteractionId,
+                playerName: self.gather.getPlayer(self.lastInteractionId).name
+            }).end();
+            self.lastInteractionId = undefined
         });
 
         this.app.get('/api/lightning', (req, res) => {

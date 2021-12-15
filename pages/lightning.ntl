@@ -41,8 +41,6 @@
         .card-header {
             background-color: #44059a;
         }
-
-
     </style>
 
     <link href="/static/css/main.css" rel="stylesheet">
@@ -50,7 +48,6 @@
 
 
 <body class="d-flex h-100 text-center text-white bg-dark">
-<input type="hidden" id="playerId" value="#playerId#">
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-auto">
         <div>
@@ -75,7 +72,7 @@
         <div class="float-md-start">
             <img class="img-responsive" src="/static/img/sate_40.png" alt="TheSpielplatz" scale="0">
         </div>
-        <div class="float-md-end">
+        <div class="float-md-end" data-footer="status">
             #footerText#
         </div>
     </footer>
@@ -92,8 +89,28 @@
         </div>
     </div>`;
 
-    const playerId = $("#playerId").val();
-    var playerHasWallet = false;
+    let playerId = undefined;
+    let playerName = undefined;
+    let playerIdRetrys = 10;
+    let playerHasWallet = false;
+
+    function loadPlayerId(successCallback) {
+        $.get("/api/lightning/getplayer", (data) => {
+            console.log(data);
+            if (data.status === "ok") {
+                playerId = data.playerId;
+                playerName = data.playerName;
+                successCallback();
+            } else {
+                playerIdRetrys--;
+                if (playerIdRetrys > 0) {
+                    setTimeout(loadPlayerId.bind(null, successCallback), 250);
+                } else {
+                    showToast({ status: "error", message: "Could not identify you, readonly."});
+                }
+            }
+        });
+    }
 
     function loadCards() {
         $("[data-content=cards]").empty();
@@ -135,12 +152,13 @@
     });
 
     $(() => {
-        loadCards();
+        $(".nav").hide();
+        loadPlayerId(() => {
+            $(".nav").show();
+            $("[data-footer=status]").text(`Logged in as ${playerName}`);
 
-        if (playerId === "undefined") {
-            $(".nav").hide();
-            showToast({ status: "error", message: "Could not identify you, readonly."});
-        }
+            loadCards();
+        });
     });
 </script>
 </body>
