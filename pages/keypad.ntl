@@ -1,0 +1,408 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>#title#</title>
+    <meta name="description" content="Keypad">
+    <meta name="author" content="TheSpielplatz">
+
+    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <script type="text/javascript" src="static/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="static/js/tsp.town.js"></script>
+
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans:300);
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            font-family: 'Open Sans', sans serif;
+            font-weight: 300;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .rotate {
+            display: none;
+            color: #fff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            text-align: center;
+            width: 400px;
+            height: 50px;
+            margin-left: -200px;
+            margin-top: -25px;
+        }
+        .keypadwrapper {
+            text-align: center;
+            width: 100%;
+            color: #fff;
+        }
+        .keypadwrapper .inputwrapper {
+            margin: 2em;
+            margin-top:50px;
+            margin-left: 6.5em;
+            line-height: 0.61em;
+            vertical-align: middle;
+        }
+        .keypadwrapper .numberinput, .keypadwrapper .indicator {
+            display: inline-block;
+            height: 25px;
+            width: 25px;
+            border-radius: 50px;
+            border: 1px solid #fff;
+            margin-right: 2%;
+            margin-left: 2%;
+            font-size: 3em;
+        }
+
+        .keypadwrapper .indicator {
+            border: 0px solid gray;
+        }
+        .keypadwrapper .red {
+            background-color: red;
+        }
+
+        .keypadwrapper .yellow {
+            background-color: orange;
+            -webkit-animation: blink-yellow 0.4s linear infinite alternate;
+            -moz-animation: blink-yellow 0.4s linear infinite alternate;
+            animation: blink-yellow 0.4s linear infinite alternate;
+        }
+        .keypadwrapper .green {
+            background-color: #35ff35 !important;
+        }
+
+        @keyframes blink-yellow {
+            0% { background-color: orange; }
+            80% { background-color: black; }
+            100% { background-color: black; }
+        }
+        @-webkit-keyframes blink-yellow {
+            0% { background-color: orange; }
+            80% { background-color: black; }
+            100% { background-color: black; }
+        }
+
+        .keypadwrapper .keypad .numberline {
+            width: 100%;
+        }
+        .keypadwrapper .keypad #linefour {
+            position: absolute;
+            bottom: 20%;
+        }
+        .keypadwrapper .keypad #linethree {
+            position: absolute;
+            bottom: 35%;
+        }
+        .keypadwrapper .keypad #linetwo {
+            position: absolute;
+            bottom: 50%;
+        }
+        .keypadwrapper .keypad #lineone {
+            position: absolute;
+            bottom: 65%;
+        }
+        .keypadwrapper .keypad .content {
+            display: inline-block;
+            margin: 0 2%;
+        }
+        .keypadwrapper .keypad .content div {
+            width: 4em;
+            height: 4em;
+            text-align: center;
+            border: 1px solid #fff;
+            border-radius: 70px;
+            display: inline-block;
+            cursor: pointer;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .keypadwrapper .keypad .content div span:nth-child(1) {
+            display: block;
+            font-size: 1.8em;
+            height: 1em;
+            margin-top: 0.2em;
+        }
+        .keypadwrapper .keypad .content div span:nth-child(2) {
+            font-size: 0.6em;
+        }
+        .keypadwrapper .keypad .content div:hover {
+            background-color: #fff;
+            color: #000;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .nocircle {
+            width: auto !important;
+            border: none !important;
+            height: auto !important;
+        }
+        @media all and (max-width: 470px) {
+            .content {
+                margin: 0 5% !important;
+            }
+        }
+        @media all and (max-width: 350px) {
+            .content {
+                margin: 0 2% !important;
+            }
+        }
+        @media all and (max-height: 470px) {
+            #linefour {
+                bottom: 2% !important;
+            }
+            #linethree {
+                bottom: 23% !important;
+            }
+            #linetwo {
+                bottom: 43% !important;
+            }
+            #lineone {
+                bottom: 63% !important;
+            }
+        }
+        .logo-overlay {
+            background: transparent;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 2%;
+            left: 0;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: end;
+            -ms-flex-align: end;
+            align-items: end;
+            -webkit-box-pack: start;
+            -ms-flex-pack: start;
+            justify-content: start;
+        }
+    </style>
+</head>
+
+<body>
+<div class="logo-overlay">
+    <img class="img-responsive" width="70" height="40" src="static/img/tsp_70x112.png" alt="TheSpielplatz" scale="0">
+</div>
+<div class="keypadwrapper">
+    <div class="inputwrapper">
+        <span class="numberinput"></span>
+        <span class="numberinput"></span>
+        <span class="numberinput"></span>
+        <span class="numberinput"></span>
+        <span class="indicator"></span>
+    </div>
+    <div class="keypad">
+        <div id="lineone" class="numberline">
+            <div class="content">
+                <div>
+                    <span class="number">1</span>
+                    <span>___</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">2</span>
+                    <span>ABC</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">3</span>
+                    <span>DEF</span>
+                </div>
+            </div>
+        </div>
+        <div id="linetwo" class="numberline">
+            <div class="content">
+                <div>
+                    <span class="number">4</span>
+                    <span>GHI</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">5</span>
+                    <span>JKL</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">6</span>
+                    <span>MNO</span>
+                </div>
+            </div>
+        </div>
+        <div id="linethree" class="numberline">
+            <div class="content">
+                <div>
+                    <span class="number">7</span>
+                    <span>PQRS</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">8</span>
+                    <span>TUV</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">9</span>
+                    <span>WXYZ</span>
+                </div>
+            </div>
+        </div>
+        <div id="linefour" class="numberline">
+            <div class="content">
+                <div>
+                    <span class="number"><</span>
+                    <span>___</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">0</span>
+                    <span>___</span>
+                </div>
+            </div>
+            <div class="content">
+                <div>
+                    <span class="number">*</span>
+                    <span>___</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<audio id="audio_up" preload="auto" src="static/sounds/violins_up.aac" type="audio/aac"></audio>
+<audio id="audio_down" preload="auto" src="static/sounds/violins_down.aac" type="audio/aac"></audio>
+
+<script>
+
+    $(function () {
+        const audio_up = document.getElementById('audio_up');
+        const audio_down = document.getElementById('audio_down');
+
+        $(".indicator").addClass("red");
+
+        let count = 0;
+        let open = false;
+
+        $(".content").click(function () {
+
+            var value = $(this).find(".number").text();
+
+            if (value !== "<") {
+                $(".numberinput").each(function () {
+                    var a = $(this).text();
+                    if (!a) {
+                        $(this).text(value);
+                        $(this).addClass("nocircle");
+                        count++;
+                        return false;
+                    }
+                });
+
+            } else {
+                $($(".numberinput").get().reverse()).each(function () {
+                    var a = $(this).text();
+                    if (a) {
+                        $(this).text("");
+                        $(this).removeClass("nocircle");
+                        count--;
+                        return false;
+                    }
+                });
+            }
+
+            console.log("Click: " + count);
+            if (count == 4) {
+                let code = "";
+                $(".numberinput").each(function () {
+                    code += $(this).text();
+                });
+                console.log(code);
+
+                var settings = {
+                    "url": document.location.origin + "/keypad",
+                    "method": "POST",
+                    "timeout": 0,
+                    "headers": {
+                        "Authorization": "Bearer " + getParam("authkey"),
+                        "Content-Type": "application/json"
+                    },
+                    "data": JSON.stringify({
+                        "code": code
+                    }),
+                };
+
+                if (!open) {
+                    $(".indicator").removeClass("red");
+                    $(".indicator").addClass("yellow");
+                    $(".indicator").removeClass("green");
+
+                    $.ajax(settings).done(function (response) {
+
+                        console.log(response);
+                        if (response.status == "open") {
+                            audio_up.play();
+                            $(".indicator").removeClass("red");
+                            $(".indicator").removeClass("yellow");
+                            $(".indicator").addClass("green");
+                            open = true;
+                        } else {
+                            audio_down.play();
+                            $(".indicator").addClass("red");
+                            $(".indicator").removeClass("yellow");
+                            $(".indicator").removeClass("green");
+                            open = false;
+                        }
+                    });
+                }
+            } else {
+                $(".indicator").addClass("red");
+                $(".indicator").removeClass("yellow");
+                $(".indicator").removeClass("green");
+                open = false;
+            }
+
+            // Idea to give the focus back from the iFrame
+            $(this).blur();
+        });
+    });
+
+    let getParam = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+</script>
+
+</body>
+</html>

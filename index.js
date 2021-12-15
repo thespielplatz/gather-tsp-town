@@ -2,7 +2,6 @@ const { API_KEY, SPACE_ID, ROOM_ID } = require("./config.js");
 const { Game } = require("@gathertown/gather-game-client");
 global.WebSocket = require("isomorphic-ws");
 
-console.log(API_KEY)
 /**** setup ****/
 
 // what's going on here is better explained in the docs:
