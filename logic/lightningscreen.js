@@ -32,8 +32,7 @@ class LightningScreen {
                 playerId: self.lastInteractionId
             });
 
-            // Todo: uncomment this!
-            //self.lastInteractionId = undefined;
+            self.lastInteractionId = undefined;
         });
 
         this.app.get('/api/lightning', (req, res) => {
