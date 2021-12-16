@@ -13,8 +13,7 @@ class LightningScreen {
         this.gather = gather;
         this.db = db;
         this.objId = objId;
-        this.lastInteractionId = undefined;
-        this.lastCounter = 0;
+        this.lastInteractionIds = [];
 
         // Init DB
         if (db.get("lightning").value() === undefined) {
@@ -23,9 +22,6 @@ class LightningScreen {
 
         this.app.get('/pages/lightning', (req, res) => {
             let footerText = "Who are you?";
-            if (self.lastInteractionId !== undefined) {
-                footerText = `Hi ${self.gather.getPlayer(self.lastInteractionId).name}!`;
-            }
 
             res.render("lightning", { title: 'Lightning Wallet',
                 footerText: footerText,
@@ -33,28 +29,17 @@ class LightningScreen {
             });
         });
 
-        this.app.get('/api/lightning/getplayer', (req, res) => {
-            if (self.lastInteractionId === undefined) {
-                res.json({ status: "noplayer" }).end();
-                return;
-            }
-
-            res.json({
-                status: "ok",
-                playerId: self.lastInteractionId,
-                playerName: self.gather.getPlayer(self.lastInteractionId).name
-            }).end();
-            self.lastInteractionId = undefined
-        });
-
         this.app.get('/api/lightning', (req, res) => {
             let data = [];
 
             const wallets = db.get("lightning").value();
             Object.keys(wallets).forEach((playerId) => {
+              const p = self.gather.getPlayer(playerId);
+              console.log(p);
+
                data.push({
                    playerId: playerId,
-                   player: self.gather.getPlayer(playerId).name,
+                   player: (p === undefined ? "not online" : p.name),
                    wallet: wallets[playerId]
                });
             });
@@ -78,9 +63,26 @@ class LightningScreen {
             res.json({ status: "success", message: "Wallet saved!"}).end();
         });
 
+
+        this.app.get('/api/lightning/getplayer', (req, res) => {
+            if (self.lastInteractionIds.length <= 0) {
+                res.json({ status: "noplayer" }).end();
+                return;
+            }
+
+            const playerId = self.lastInteractionIds.shift();
+            console.log(playerId);
+            console.log(self.gather.getPlayer(playerId));
+
+            res.json({
+                status: "ok",
+                playerId: playerId,
+                playerName: self.gather.getPlayer(playerId).name
+            }).end();
+        });
+
         this.gather.subscribeToPlayerInteracts(objId, (playerId, player) => {
-            this.lastInteractionId = playerId;
-            this.lastCounter = 1;
+            self.lastInteractionIds.push(playerId);
         });
     }
 }
