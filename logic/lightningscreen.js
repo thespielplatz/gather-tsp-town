@@ -35,12 +35,21 @@ class LightningScreen {
             const wallets = db.get("lightning").value();
             Object.keys(wallets).forEach((playerId) => {
               const p = self.gather.getPlayer(playerId);
-              console.log(p);
+              const w = wallets[playerId];
+
+              let name = w.name;
+              // Player online
+              if (p !== undefined) {
+                  name = p.name;
+
+                  // Save Online name to DB
+                  db.get("lightning").get(playerId).get("name").set(p.name).save();
+              }
 
                data.push({
                    playerId: playerId,
-                   player: (p === undefined ? "not online" : p.name),
-                   wallet: wallets[playerId]
+                   player: name,
+                   wallet: w.webpath
                });
             });
 
@@ -58,11 +67,33 @@ class LightningScreen {
             image.pipe(require('fs').createWriteStream(filepath));
 
             const webpath = filepath.substr(1);
-            self.db.get("lightning").get(playerId).set(webpath).save();
+            self.db.get("lightning").get(playerId).set({
+              name: self.gather.getPlayer(playerId).name,
+              timestamp: Date.now(),
+              webpath: webpath
+            }).save();
 
             res.json({ status: "success", message: "Wallet saved!"}).end();
         });
 
+        let deleteTimeoutId = undefined;
+        let deleteTime = 0;
+        let deleteTimeoutCheck = () => {
+            console.log("deleteTimeoutCheck - Tick");
+            if (self.lastInteractionIds.length <= 0) {
+              console.log("deleteTimeoutCheck - Stopped no Ids");
+              clearTimeout(deleteTimeoutId);
+              deleteTimeoutId = undefined;
+              return;
+            }
+            if (Date.now() < deleteTime) return;
+            console.log("deleteTimeoutCheck - Stopped > 2sec");
+
+            self.lastInteractionIds.splice(0, self.lastInteractionIds.length);
+            clearTimeout(deleteTimeoutId);
+            deleteTimeoutId = undefined;
+            return;
+        }
 
         this.app.get('/api/lightning/getplayer', (req, res) => {
             if (self.lastInteractionIds.length <= 0) {
@@ -71,8 +102,6 @@ class LightningScreen {
             }
 
             const playerId = self.lastInteractionIds.shift();
-            console.log(playerId);
-            console.log(self.gather.getPlayer(playerId));
 
             res.json({
                 status: "ok",
@@ -83,6 +112,10 @@ class LightningScreen {
 
         this.gather.subscribeToPlayerInteracts(objId, (playerId, player) => {
             self.lastInteractionIds.push(playerId);
+            deleteTime = Date.now() + 1000 * 2;
+            if (deleteTimeoutId === undefined) {
+              deleteTimeoutId = setInterval(deleteTimeoutCheck, 1000);
+            }
         });
     }
 }
