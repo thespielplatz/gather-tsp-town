@@ -67,12 +67,13 @@ $(() => {
 
     function authSuccess(player) {
         console.log("authSuccess");
+        auth.modal.hide();
 
         auth.player = player;
         if (auth.callback) auth.callback(player);
 
+      $("[data-footer=auth]").text(`Logged In: ${player.name}`);
         console.log(player);
-        showToast({status: "success", message: "ok"});
     }
 
     function notAuthenticated() {

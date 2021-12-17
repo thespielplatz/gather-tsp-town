@@ -33,20 +33,27 @@ class Auth {
             console.log(objId);
 
             if (!(objId in this.registeredObjects)) {
-                res.json({status: "error"}).end();
+                res.json({status: "error", info: "objId does not exist"}).end();
                 return;
             }
 
             // Waiting
             if (self.registeredObjects[objId].ids.length <= 0) {
-                res.json({status: "unkown"}).end();
+              // Page time more than 1.5 sec
+              const pageTimespan = Date.now() - pageTime;
+              if (pageTimespan > 1.5 * 1000) {
+                  res.json({status: "error", info: "Page time > than 1.5 sec"}).end();
+                  return;
+              }
+
+                res.json({status: "unkown", info: "no players interacted"}).end();
                 return;
             }
 
             // Two player at the same time
             if (self.registeredObjects[objId].ids.length >= 2) {
-                self.registeredObjects[objId].length = 0;
-                res.json({status: "error"}).end();
+                self.registeredObjects[objId].ids.length = 0;
+                res.json({status: "error", info: "Two player at the same time"}).end();
                 return;
             }
 
@@ -54,8 +61,8 @@ class Auth {
             const interactionTimespan = Math.abs(pageTime - self.registeredObjects[objId].serverTime);
 
             if (interactionTimespan > 1.5 * 1000) {
-                self.registeredObjects[objId].length = 0;
-                res.json({status: "error"}).end();
+                self.registeredObjects[objId].ids.length = 0;
+                res.json({status: "error", info: "Interaction times to wide > 1.5sec"}).end();
                 return;
             }
 
@@ -64,16 +71,18 @@ class Auth {
             const timespan = Date.now() - start;
 
             if (timespan < 2.5 * 1000) {
-                res.json({status: "unkown"}).end();
+                res.json({status: "unkown", info: "No interfierence for 2.5 sec - Waiting"}).end();
                 return;
             }
 
-            const playerId = self.registeredObjects[objId].shift();
+            const playerId = self.registeredObjects[objId].ids.shift();
 
             res.json({
                 status: "ok",
-                playerId: playerId,
-                playerName: gather.getPlayer(playerId).name
+                player: {
+                  id: playerId,
+                  name: gather.getPlayer(playerId).name
+                }
             }).end();
         });
 
