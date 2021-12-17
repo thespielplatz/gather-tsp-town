@@ -24,6 +24,11 @@ class Auth {
         }
 
         app.get('/auth/identified', (req, res) => {
+            // Check Cookie
+
+            // Todo: do something about
+            // self.registeredObjects[objId].ids.push(playerId);
+
             res.json({ status: "unkown" }).end();
         });
 
@@ -39,12 +44,12 @@ class Auth {
 
             // Waiting
             if (self.registeredObjects[objId].ids.length <= 0) {
-              // Page time more than 1.5 sec
-              const pageTimespan = Date.now() - pageTime;
-              if (pageTimespan > 1.5 * 1000) {
-                  res.json({status: "error", info: "Page time > than 1.5 sec"}).end();
-                  return;
-              }
+                // Page time more than 1.5 sec
+                const pageTimespan = Date.now() - pageTime;
+                if (pageTimespan > 1.5 * 1000) {
+                    res.json({status: "error", info: "Page time > than 1.5 sec"}).end();
+                    return;
+                }
 
                 res.json({status: "unkown", info: "no players interacted"}).end();
                 return;
@@ -91,9 +96,10 @@ class Auth {
             const playerId = context.playerId;
             const objId = data.playerInteracts.objId;
 
-            console.log(gather.players[context.playerId].name + " with " + objId);
+            console.log("[Auth|Interact] " + gather.players[context.playerId].name + " with " + objId);
 
             if (objId in self.registeredObjects) {
+                // Todo: do something about the identified Players
                 self.registeredObjects[objId].ids.push(playerId);
                 self.registeredObjects[objId].serverTime = Date.now();
             }
