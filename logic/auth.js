@@ -51,6 +51,7 @@ class Auth {
                     return;
                 }
 
+                // Waiting
                 res.json({status: "unkown", info: "no players interacted"}).end();
                 return;
             }
