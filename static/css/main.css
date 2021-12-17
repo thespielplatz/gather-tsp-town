@@ -2,6 +2,15 @@
  * Globals
  */
 
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('/static/fonts/BebasNeue-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+@font-face {
+  font-family: 'PressStart2P';
+  src: url('/static/fonts/PressStart2P-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+
 /* Custom default button */
 .btn-secondary,
 .btn-secondary:hover,
@@ -15,6 +24,7 @@
  * Base structure
  */
 body {
+  xfont-family: 'Bebas Neue', cursive;
   text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
   box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 }
@@ -61,4 +71,61 @@ body {
 .toast{
   text-shadow: none;
   color: black;
+}
+
+#theAuthModal {
+  color: white;
+}
+
+#theAuthModal .modal-content {
+  background-color: rgba(0,0,0,.85);
+  font-family: 'PressStart2P';
+  color: white;
+}
+
+#theAuthModal .modal-header {
+  border-color: black;
+}
+#theAuthModal .modal-body {
+  font-size: 12px;
+  text-align: left;
+  color: orange;
+}
+#theAuthModal .header-auth {
+  width: 320px;
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .5em solid orange; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  animation: typing-auth 2.5s steps(17, end),
+          blink-caret .5s step-end infinite;
+}
+
+#theAuthModal .header-error {
+  width: 120px;
+  overflow: hidden; /* Ensures the content is not revealed until the animation */
+  border-right: .5em solid orange; /* The typwriter cursor */
+  white-space: nowrap; /* Keeps the content on a single line */
+  margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+  letter-spacing: .15em; /* Adjust as needed */
+  animation: typing-error 1.0s steps(6, end),
+  blink-caret .5s step-end infinite;
+}
+
+/* The typing effect */
+@keyframes typing-auth {
+  from { width: 0 }
+  to { width: 320px }
+}
+
+@keyframes typing-error {
+  from { width: 0 }
+  to { width: 120px }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange }
 }

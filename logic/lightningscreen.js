@@ -2,7 +2,7 @@ const fs = require('fs');
 const dir = './static/img/lightning';
 
 class LightningScreen {
-    constructor(app, gather, db, objId) {
+    constructor(app, gather, db, auth, objId) {
         const self = this;
 
         if (!fs.existsSync(dir)){
@@ -20,11 +20,13 @@ class LightningScreen {
             db.get("lightning").set({}).save();
         }
 
-        this.app.get('/pages/lightning', (req, res) => {
-            let footerText = "Who are you?";
+        // Init Auth
+        auth.registerObject(objId);
+
+        console.log(`LightningScreen at: /pages/lightning/${objId}`)
+        this.app.get(`/pages/lightning/${objId}`, (req, res) => {
 
             res.render("lightning", { title: 'Lightning Wallet',
-                footerText: footerText,
                 objId: objId
             });
         });
@@ -74,48 +76,6 @@ class LightningScreen {
             }).save();
 
             res.json({ status: "success", message: "Wallet saved!"}).end();
-        });
-
-        let deleteTimeoutId = undefined;
-        let deleteTime = 0;
-        let deleteTimeoutCheck = () => {
-            console.log("deleteTimeoutCheck - Tick");
-            if (self.lastInteractionIds.length <= 0) {
-              console.log("deleteTimeoutCheck - Stopped no Ids");
-              clearTimeout(deleteTimeoutId);
-              deleteTimeoutId = undefined;
-              return;
-            }
-            if (Date.now() < deleteTime) return;
-            console.log("deleteTimeoutCheck - Stopped > 2sec");
-
-            self.lastInteractionIds.splice(0, self.lastInteractionIds.length);
-            clearTimeout(deleteTimeoutId);
-            deleteTimeoutId = undefined;
-            return;
-        }
-
-        this.app.get('/api/lightning/getplayer', (req, res) => {
-            if (self.lastInteractionIds.length <= 0) {
-                res.json({ status: "noplayer" }).end();
-                return;
-            }
-
-            const playerId = self.lastInteractionIds.shift();
-
-            res.json({
-                status: "ok",
-                playerId: playerId,
-                playerName: self.gather.getPlayer(playerId).name
-            }).end();
-        });
-
-        this.gather.subscribeToPlayerInteracts(objId, (playerId, player) => {
-            self.lastInteractionIds.push(playerId);
-            deleteTime = Date.now() + 1000 * 2;
-            if (deleteTimeoutId === undefined) {
-              deleteTimeoutId = setInterval(deleteTimeoutCheck, 1000);
-            }
         });
     }
 }

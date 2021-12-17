@@ -26,9 +26,12 @@ function showToast(data) {
     let status = "default";
     let message = "I did as you asked!";
 
-    if (typeof data === "string") message = data;
-    if ("message" in data) message = data.message;
-    if ("status" in data) status = data.status;
+    if (typeof data === "string") {
+        message = data;
+    } else if (data !== undefined) {
+        if ("message" in data) message = data.message;
+        if ("status" in data) status = data.status;
+    }
 
     $("#singleToast .toast-body").text(message);
     $("#singleToast .toast-header").removeClass("bg-success");

@@ -22,6 +22,7 @@ class Gather {
         this.players = this.game.players;
 
         // player Interacts with Objects
+        /*
         this.game.subscribeToEvent("playerInteracts", (data, context) => {
             console.log(JSON.stringify(data));
             console.log(self.game.players[context.playerId].name);
@@ -32,15 +33,16 @@ class Gather {
                    sub.callback(context.playerId, self.game.players[context.playerId]);
                }
             });
-        });
+        });*/
     }
+
+    /*
+        subscribeToPlayerInteracts(objId, callback) {
+            this.subscriptions["playerInteracts"].push({ objId, callback });
+        }*/
 
     getPlayer(playerId) {
         return this.game.players[playerId];
-    }
-
-    subscribeToPlayerInteracts(objId, callback) {
-        this.subscriptions["playerInteracts"].push({ objId, callback });
     }
 }
 

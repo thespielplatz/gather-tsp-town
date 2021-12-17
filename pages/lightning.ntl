@@ -18,6 +18,7 @@
     <script src="/static/lib/bootstrap/bootstrap.min.js"></script>
     <script src="/static/js/toast.js"></script>
     <script src="/static/js/modal.js"></script>
+    <script src="/static/js/auth.js"></script>
 
     <style>
         .toast{
@@ -46,8 +47,8 @@
     <link href="/static/css/main.css" rel="stylesheet">
 </head>
 
-
 <body class="d-flex h-100 text-center text-white bg-dark">
+    <input type="hidden" id="objId" value="#objId#">
 <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-auto">
         <div>
@@ -72,8 +73,7 @@
         <div class="float-md-start">
             <img class="img-responsive" src="/static/img/sate_40.png" alt="TheSpielplatz" scale="0">
         </div>
-        <div class="float-md-end" data-footer="status">
-            #footerText#
+        <div class="float-md-end" data-footer="auth">
         </div>
     </footer>
 </div>
@@ -153,6 +153,7 @@
 
     $(() => {
         $(".nav").hide();
+        return;
         loadPlayerId(() => {
             $(".nav").show();
             $("[data-footer=status]").text(`Logged in as ${playerName}`);

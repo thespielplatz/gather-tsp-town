@@ -20,7 +20,7 @@ $(() => {
 
     $("body").append(html);
     theModal = new bootstrap.Modal(document.getElementById('theModal'));
-    $(".modal-footer [action=save]").click(() => {
+    $("#theModal .modal-footer [action=save]").click(() => {
         console.log("save");
         theModal.hide();
         if (theModalCallback) theModalCallback();
