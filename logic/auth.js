@@ -195,6 +195,7 @@ class Auth {
         res.cookie("tspUserIdentification", token, {
             secure: true,
             httpOnly: true,
+            sameSite: "None"
         });
     }
 
