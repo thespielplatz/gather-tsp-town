@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const JWT_SIGN_SECRET = require('../config.js').JWT_SIGN_SECRET;
+const DEV_ID = require('../config.js').DEV_ID;
 const userIdentCookie = "tspUserIdentification";
 
 class Auth {
@@ -20,25 +21,7 @@ class Auth {
             }).save();
         }
 
-        // Todo: implement the timeout check
-        let timeoutCheck = () => {
-            console.log("auth.timeoutCheck - Tick");
-            if (self.lastInteractionIds.length <= 0) {
-                console.log("deleteTimeoutCheck - Stopped no Ids");
-                clearTimeout(timeoutId);
-                timeoutId = undefined;
-                return;
-            }
-            if (Date.now() < time) return;
-            console.log("deleteTimeoutCheck - Stopped > 2sec");
-
-            //self.lastInteractionIds.splice(0, self.lastInteractionIds.length);
-            clearTimeout(timeoutId);
-            timeoutId = undefined;
-            return;
-        }
-
-        app.get('/auth/identified/', self.checkUser.bind(self), (req, res) => {
+        app.get('/auth/identified/', self.checkAuth.bind(self), (req, res) => {
             if (res.locals.playerId) {
 
                 // Ignore Users interaction - delete from registered Objects
@@ -161,7 +144,7 @@ class Auth {
             const playerId = context.playerId;
             const objId = data.playerInteracts.objId;
 
-            console.log(`[Auth|Interact] ${gather.players[context.playerId].name} (${context.playerId}) with ${objId}`);
+            console.log(`[Auth|Interact] ${gather.getPlayer(context.playerId).name} (${context.playerId}) with ${objId}`);
 
             // Ignoring Auth Interaction if player is already authenticated
             const index = self.ignoreNextInteraction.indexOf(playerId);
@@ -204,7 +187,7 @@ class Auth {
         res.clearCookie(userIdentCookie, { path: '/' })
     }
 
-    checkUser(req, res, next) {
+    checkAuth(req, res, next) {
         if (!(userIdentCookie in req.cookies)) {
             next();
             return;
@@ -220,15 +203,23 @@ class Auth {
                 throw new Error("payload incorrect");
             }
 
+            const playerId = decoded.playerId;
+
             // Check if player is online
-            if (!(decoded.playerId in this.gather.players)) {
-                console.log(decoded);
-                throw new Error("player not on server");
+            if (!(playerId in this.gather.game.players)) {
+
+                // Ignore Developer Id
+                if (DEV_ID !== playerId) {
+                    console.log(decoded);
+                    throw new Error("player not on server");
+                }
             }
 
+            this.gather.updatePlayer(playerId);
             res.locals.playerId = decoded.playerId;
         } catch(err) {
-            console.log(`[Auth|checkUser|Error]: ${err.name} - ${err.message}`);
+            console.log(`[Auth|checkAuth|Error]: ${err.name} - ${err.message}`);
+            console.log(err);
             this.delAuth(req, res);
         }
         next();

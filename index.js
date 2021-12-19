@@ -4,7 +4,8 @@ const app = server.app;
 const db = require('./db.js');
 const moment = require('moment');
 const Gather = require('./gather');
-const gather = new Gather();
+
+const gather = new Gather(db);
 
 var jwt = require('jsonwebtoken');
 const JWT_SIGN_SECRET = require('./config.js').JWT_SIGN_SECRET;
