@@ -51,7 +51,10 @@ class Auth {
                 })
 
                 // Ignore next interaction
-                self.ignoreNextInteraction.push(res.locals.playerId);
+                const index = self.ignoreNextInteraction.indexOf(res.locals.playerId);
+                if (index <= -1) {
+                    self.ignoreNextInteraction.push(res.locals.playerId);
+                }
 
                 res.json({ status: "ok",
                     player: {
@@ -162,13 +165,14 @@ class Auth {
 
             // Ignoring Auth Interaction if player is already authenticated
             const index = self.ignoreNextInteraction.indexOf(playerId);
+
             if (index > -1) {
                 console.log(`[Auth|Interact] ignoring interaction`);
                 self.ignoreNextInteraction.splice(index, 1);
+                return;
             }
 
             if (objId in self.registeredObjects) {
-                // Todo: do something about the identified Players
                 self.registeredObjects[objId].ids.push(playerId);
                 self.registeredObjects[objId].serverTime = Date.now();
             }
