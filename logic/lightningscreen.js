@@ -23,9 +23,9 @@ class LightningScreen {
         // Init Auth
         auth.registerObject(objId);
 
-        console.log(`LightningScreen at: /pages/lightning/${objId}`)
-        this.app.get(`/pages/lightning/${objId}`, (req, res) => {
+        console.log(`LightningScreen at: /pages/lightning/${objId}`);
 
+        this.app.get(`/pages/lightning/${objId}`, (req, res) => {
             res.render("lightning", { title: 'Lightning Wallet',
                 objId: objId
             });

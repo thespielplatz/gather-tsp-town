@@ -1,10 +1,11 @@
 const PORT = 2222;
 
-let NAME = require('./package.json').name;
-let VERSION = require('./package.json').version;
+const NAME = require('./package.json').name;
+const VERSION = require('./package.json').version;
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser')
 const favicon = require('express-favicon');
 const fs = require('fs');
 
@@ -14,6 +15,8 @@ app.use('/static', express.static('static'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
 
 // Template Engine
 app.engine('ntl', function (filePath, options, callback) { // define the template engine
@@ -40,6 +43,28 @@ app.set('view engine', 'ntl') // register the template engine
 // -----------------------> Logging
 app.use((req, res, next) => {
   console.log(`${req.method}:${req.url} ${res.statusCode}`);
+  next();
+});
+
+// -----------------------> Exclude TRACE and TRACK methods to avoid XST attacks.
+app.use((req, res, next) => {
+  const allowedMethods = [
+    "OPTIONS",
+    "HEAD",
+    "CONNECT",
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "PATCH",
+  ];
+
+  if (!allowedMethods.includes(req.method)) {
+    res.status(405).render("error", { title: "405",
+      'message' : `${req.method} not allowed. 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>` }).end();
+    return;
+  }
+
   next();
 });
 

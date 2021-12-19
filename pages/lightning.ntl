@@ -13,6 +13,8 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
+    <link rel="preload" href="/static/fonts/PressStart2P-Regular.ttf" as="font" crossorigin="anonymous" />
+
     <link href="/static/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
     <script src="/static/js/jquery-3.6.0.min.js"></script>
     <script src="/static/lib/bootstrap/bootstrap.min.js"></script>
@@ -89,28 +91,7 @@
         </div>
     </div>`;
 
-    let playerId = undefined;
-    let playerName = undefined;
-    let playerIdRetrys = 10;
     let playerHasWallet = false;
-
-    function loadPlayerId(successCallback) {
-        $.get("/api/lightning/getplayer", (data) => {
-            console.log(data);
-            if (data.status === "ok") {
-                playerId = data.playerId;
-                playerName = data.playerName;
-                successCallback();
-            } else {
-                playerIdRetrys--;
-                if (playerIdRetrys > 0) {
-                    setTimeout(loadPlayerId.bind(null, successCallback), 250);
-                } else {
-                    showToast({ status: "error", message: "Could not identify you, readonly."});
-                }
-            }
-        });
-    }
 
     function loadCards() {
         $("[data-content=cards]").empty();
@@ -118,11 +99,10 @@
         $.get("/api/lightning", (data) => {
             console.log(data);
             data.forEach((w) => {
-                if (w.playerId == playerId) playerHasWallet = true;
+                if (w.playerId == auth.player.id) playerHasWallet = true;
                 let card = cardTemplate.replace("#header#", w.player);
                 card = card.replace("#src#", w.wallet);
                 card = card.replace("#body#", "");
-                //for (i = 0; i < 3; ++i)
                 $("[data-content=cards]").append(card);
             });
 
@@ -142,7 +122,7 @@
         showModal(title, modalBody, () => {
             const walletAddress = $("#wallet-address").val();
 
-            $.post("/api/lightning", { playerId: playerId, wallet: walletAddress }).done((data) => {
+            $.post("/api/lightning", { playerId: auth.player.id, wallet: walletAddress }).done((data) => {
                 showToast(data);
                 loadCards();
             }).fail(() => {
@@ -153,13 +133,11 @@
 
     $(() => {
         $(".nav").hide();
-        return;
-        loadPlayerId(() => {
-            $(".nav").show();
-            $("[data-footer=status]").text(`Logged in as ${playerName}`);
 
+        auth.callback = () => {
+            $(".nav").show();
             loadCards();
-        });
+        };
     });
 </script>
 </body>

@@ -1,11 +1,26 @@
+const jwt = require('jsonwebtoken');
+const JWT_SIGN_SECRET = require('../config.js').JWT_SIGN_SECRET;
+const userIdentCookie = "tspUserIdentification";
+
 class Auth {
     constructor(app, gather, db) {
         const self = this;
 
         this.registeredObjects = {};
+        this.ignoreNextInteraction = [];
 
         let timeoutId = undefined;
         let time = 0;
+        this.gather = gather;
+
+        // Init DB
+        if (db.get("auth").value() === undefined) {
+            db.get("auth").set({
+
+            }).save();
+        }
+
+        // Todo: implement the timeout check
         let timeoutCheck = () => {
             console.log("auth.timeoutCheck - Tick");
             if (self.lastInteractionIds.length <= 0) {
@@ -23,13 +38,56 @@ class Auth {
             return;
         }
 
-        app.get('/auth/identified', (req, res) => {
-            // Check Cookie
+        app.get('/auth/identified/', self.checkUser.bind(self), (req, res) => {
+            if (res.locals.playerId) {
 
-            // Todo: do something about
-            // self.registeredObjects[objId].ids.push(playerId);
+                // Ignore Users interaction - delete from registered Objects
+                Object.keys(self.registeredObjects).forEach((objId) => {
+                    const data = self.registeredObjects[objId]
+                    const index = data.ids.indexOf(res.locals.playerId);
+                    if (index > -1) {
+                        data.ids.splice(index, 1);
+                    }
+                })
 
-            res.json({ status: "unkown" }).end();
+                // Ignore next interaction
+                self.ignoreNextInteraction.push(res.locals.playerId);
+
+                res.json({ status: "ok",
+                    player: {
+                        id: res.locals.playerId,
+                        name: gather.getPlayer(res.locals.playerId).name
+                    }
+                }).end();
+            } else {
+                res.json({ status: "unkown" }).end();
+            }
+        });
+
+        app.get('/auth/delauth', (req, res) => {
+            self.delAuth(req, res);
+            res.json({ status: "ok" }).end();
+        });
+
+        app.get('/auth/info', (req, res) => {
+            console.log('Cookies: ', req.cookies)
+            res.send(JSON.stringify(req.cookies)).end();
+        });
+
+        app.get('/auth/setfil', (req, res) => {
+            console.log('Cookies: ', req.cookies)
+
+            var payload = {
+                playerId: "ewEd2cOdove2tX9NCoTAMqaMxTU2",
+            }
+            var token = jwt.sign(payload, JWT_SIGN_SECRET);
+
+            res.cookie("tspUserIdentification", token, {
+                secure: true,
+                httpOnly: true,
+            });
+
+            res.send("ok");
         });
 
         app.get('/auth/auth/:objId/:pageTime', (req, res) => {
@@ -83,6 +141,9 @@ class Auth {
 
             const playerId = self.registeredObjects[objId].ids.shift();
 
+            // Set Auth Cookie
+            self.setAuth(req, res, playerId);
+
             res.json({
                 status: "ok",
                 player: {
@@ -97,7 +158,14 @@ class Auth {
             const playerId = context.playerId;
             const objId = data.playerInteracts.objId;
 
-            console.log("[Auth|Interact] " + gather.players[context.playerId].name + " with " + objId);
+            console.log(`[Auth|Interact] ${gather.players[context.playerId].name} (${context.playerId}) with ${objId}`);
+
+            // Ignoring Auth Interaction if player is already authenticated
+            const index = self.ignoreNextInteraction.indexOf(playerId);
+            if (index > -1) {
+                console.log(`[Auth|Interact] ignoring interaction`);
+                self.ignoreNextInteraction.splice(index, 1);
+            }
 
             if (objId in self.registeredObjects) {
                 // Todo: do something about the identified Players
@@ -107,24 +175,58 @@ class Auth {
         });
     }
 
-/*
-    gather.subscribeToPlayerInteracts(objId, (playerId, player) => {
-        self.lastInteractionIds.push(playerId);
-        deleteTime = Date.now() + 1000 * 2;
-        if (deleteTimeoutId === undefined) {
-            deleteTimeoutId = setInterval(deleteTimeoutCheck, 1000);
-        }
-
-        });
-
-
-    }
-*/
     registerObject(objId) {
         this.registeredObjects[objId] = {
             ids: [],
             timeout: 0
         };
+    }
+
+    setAuth(req, res, playerId) {
+        const payload = {
+            playerId: playerId,
+        }
+        const token = jwt.sign(payload, JWT_SIGN_SECRET);
+
+        res.cookie("tspUserIdentification", token, {
+            secure: true,
+            httpOnly: true,
+        });
+    }
+
+    delAuth(req, res) {
+        console.log("Clearing Auth Cookie");
+        res.clearCookie(userIdentCookie, { path: '/' })
+    }
+
+    checkUser(req, res, next) {
+        if (!(userIdentCookie in req.cookies)) {
+            next();
+            return;
+        }
+
+        const token = req.cookies[userIdentCookie];
+        try {
+            const decoded = jwt.verify(token, JWT_SIGN_SECRET);
+
+            // Check Payload
+            if (!('playerId' in decoded)) {
+                console.log(decoded);
+                throw new Error("payload incorrect");
+            }
+
+            // Check if player is online
+            if (!(decoded.playerId in this.gather.players)) {
+                console.log(decoded);
+                throw new Error("player not on server");
+            }
+
+            res.locals.playerId = decoded.playerId;
+        } catch(err) {
+            console.log(`[Auth|checkUser|Error]: ${err.name} - ${err.message}`);
+            this.delAuth(req, res);
+        }
+        next();
     }
 }
 

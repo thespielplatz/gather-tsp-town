@@ -2,19 +2,18 @@ const server = require('./server');
 const {name, version} = require("./package.json");
 const app = server.app;
 const db = require('./db.js');
+const moment = require('moment');
 const Gather = require('./gather');
 const gather = new Gather();
+
+var jwt = require('jsonwebtoken');
+const JWT_SIGN_SECRET = require('./config.js').JWT_SIGN_SECRET;
 
 const Auth = require('./logic/auth');
 const LightningScreen = require('./logic/lightningscreen')
 
 app.get('/ping', (req, res) => {
     res.json("pong").end();
-});
-
-app.get('/auth/authplayer', (req, res) => {
-
-    res.json({status: "wainting"}).end();
 });
 
 const auth = new Auth(app, gather, db);

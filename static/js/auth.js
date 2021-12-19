@@ -70,10 +70,10 @@ $(() => {
         auth.modal.hide();
 
         auth.player = player;
-        if (auth.callback) auth.callback(player);
-
-      $("[data-footer=auth]").text(`Logged In: ${player.name}`);
+        $("[data-footer=auth]").text(`Logged In: ${player.name}`);
         console.log(player);
+
+        if (auth.callback) auth.callback();
     }
 
     function notAuthenticated() {
