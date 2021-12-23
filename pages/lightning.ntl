@@ -75,6 +75,11 @@
         <div class="float-md-start">
             <img class="img-responsive" src="/static/img/sate_40.png" alt="TheSpielplatz" scale="0">
         </div>
+        <!--
+        <div class="float-md-end">
+            <div class="avatar"></div>
+        </div>
+        -->
         <div class="float-md-end" data-footer="auth">
         </div>
     </footer>

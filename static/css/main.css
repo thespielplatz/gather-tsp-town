@@ -129,3 +129,25 @@ body {
   from, to { border-color: transparent }
   50% { border-color: orange }
 }
+
+.avatar {
+  position: relative;
+  margin-left: 10px;
+  width: 50px;
+  height: 50px;
+  border: 1px solid white;
+}
+
+.avatar img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.avatar img.skin { z-index: 1; }
+.avatar img.hair { z-index: 2; }
+
+.avatar img.skin {
+  top: 12px;
+  left: 12px;
+}

@@ -51,6 +51,7 @@ class LightningScreen {
                data.push({
                    playerId: playerId,
                    player: name,
+                   outfitString: ("outfitString" in p ? p.outfitString : false),
                    wallet: w.webpath
                });
             });

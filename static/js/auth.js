@@ -73,7 +73,46 @@ $(() => {
         $("[data-footer=auth]").text(`Logged In: ${player.name}`);
         console.log(player);
 
+        if (player.outfitString) {
+            const outfitString = JSON.parse(player.outfitString);
+            //buildPlayerAvatar(outfitString);
+        }
+
         if (auth.callback) auth.callback();
+    }
+
+    function buildPlayerAvatar(outfitString) {
+        console.log(Object.keys(outfitString));
+        Object.keys(outfitString).forEach(partKey => {
+            const part = outfitString[partKey];
+            console.log(partKey);
+
+            // 0: "costume"
+            // 1: "shoes"
+            // 2: "hair"
+            // 3: "skin"
+            // 4: "bottom"
+            // 5: "glasses"
+            // 6: "hat"
+            // 7: "other"
+            // 8: "top"
+            // 9: "facial_hair"
+
+            switch (partKey) {
+                case "costume":
+                case "facial_hair":
+                case "hat":
+                case "other":
+                    break;
+
+                case "hair": // 50x50
+                case "skin": // 26x26
+                    console.log(part.previewUrl);
+                    $(".avatar").append(`<img class="${partKey}" src="${part.previewUrl}">`);
+            }
+        });
+
+
     }
 
     function notAuthenticated() {

@@ -39,10 +39,13 @@ class Auth {
                     self.ignoreNextInteraction.push(res.locals.playerId);
                 }
 
+                const p = gather.getPlayer(res.locals.playerId);
+
                 res.json({ status: "ok",
                     player: {
                         id: res.locals.playerId,
-                        name: gather.getPlayer(res.locals.playerId).name
+                        name: p.name,
+                        outfitString: ("outfitString" in p ? p.outfitString : false)
                     }
                 }).end();
             } else {
