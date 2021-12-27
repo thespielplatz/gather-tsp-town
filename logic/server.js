@@ -1,7 +1,7 @@
 const PORT = 2222;
 
-const NAME = require('./package.json').name;
-const VERSION = require('./package.json').version;
+const NAME = require('./../package.json').name;
+const VERSION = require('./../package.json').version;
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,7 +10,7 @@ const favicon = require('express-favicon');
 const fs = require('fs');
 
 const app = express();
-app.use(favicon(__dirname + '/static/img/favicon.png'));
+app.use(favicon(__dirname + '/../static/img/favicon.png'));
 app.use('/static', express.static('static'));
 
 app.use(bodyParser.json());

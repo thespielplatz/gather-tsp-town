@@ -73,11 +73,6 @@ $(() => {
         $("[data-footer=auth]").text(`Logged In: ${player.name}`);
         console.log(player);
 
-        if (player.outfitString) {
-            const outfitString = JSON.parse(player.outfitString);
-            //buildPlayerAvatar(outfitString);
-        }
-
         if (auth.callback) auth.callback();
     }
 

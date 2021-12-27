@@ -1,0 +1,91 @@
+<!doctype html>
+
+<html lang="en" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>#title#</title>
+    <meta name="description" content="">
+    <meta name="author" content="TheSpielplatz">
+
+    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <link rel="preload" href="/static/fonts/PressStart2P-Regular.ttf" as="font" crossorigin="anonymous" />
+
+    <link href="/static/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/lib/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/js/toast.js"></script>
+    <script src="/static/js/modal.js"></script>
+    <script src="/static/js/auth.js"></script>
+
+    <style>
+        .toast{
+            text-shadow: none;
+            color: black;
+        }
+        .modal {
+            text-shadow: none;
+            color: black;
+        }
+        .btn-primary {
+            background-color: #2f036b;
+        }
+        .btn-primary:hover {
+            background-color: #9b4cfd;
+        }
+    </style>
+
+    <link href="/static/css/main.css" rel="stylesheet">
+</head>
+
+<body class="d-flex h-100 text-center text-white bg-dark">
+    <input type="hidden" id="objId" value="#objId#">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+        <div>
+            <img class="float-md-start mb-0" style="margin-right: 13px;" width="40" height="40" src="/static/img/lightning_40.png" alt="Lightning" scale="0">
+            <h3 class="float-md-start mb-0 cursor">#title#</h3>
+        </div>
+    </header>
+
+    <main class="mx-auto" style="width: 800px;">
+        <p class="lead">
+        </p>
+    </main>
+
+    <footer class="mt-auto text-white-50">
+        <div class="float-md-start">
+            <img class="img-responsive" src="/static/img/sate_40.png" alt="TheSpielplatz" scale="0">
+        </div>
+        <!--
+        <div class="float-md-end">
+            <div class="avatar"></div>
+        </div>
+        -->
+        <div class="float-md-end" data-footer="auth">
+        </div>
+    </footer>
+</div>
+
+<script>
+    $(() => {
+        auth.callback = () => {
+
+            if (auth.player.outfitString) {
+                const outfit = JSON.parse(auth.player.outfitString);
+                buildPlayerAvatar(outfit);
+            }
+        };
+    });
+
+    function buildPlayerAvatar(outfit) {
+        const parts = Object.keys(outfit);
+        console.log(parts);
+    }
+</script>
+</body>
+</html>

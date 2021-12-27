@@ -1,9 +1,15 @@
+const SPACE_ID = require('../../config.js').SPACE_ID;
+const API_KEY = require('../../config.js').API_KEY;
+
 global.WebSocket = require("isomorphic-ws");
+const Auth = require('./auth');
+const web = require('./web');
 
 class Gather {
-    constructor(db) {
+    static Auth = Auth;
+
+    constructor(db, app) {
         this.db = db;
-        this.config = require("./config.js");
         this.game = undefined;
 
         this.setup();
@@ -15,16 +21,18 @@ class Gather {
             }).save();
         }
 
-        this.subscriptions = {
-            "playerInteracts" : []
-        };
+        // Init Auth
+        this.auth = new Auth(app, this, db);
+
+        // Help Routes
+        web(app, this.auth);
     }
 
     setup() {
         const self = this;
         const {Game} = require("@gathertown/gather-game-client");
-        this.game = new Game(() => Promise.resolve({apiKey: this.config.API_KEY}));
-        this.game.connect(this.config.SPACE_ID); // replace with your spaceId of choice
+        this.game = new Game(() => Promise.resolve({apiKey: API_KEY}));
+        this.game.connect(SPACE_ID); // replace with your spaceId of choice
 
         this.game.subscribeToConnection((connected) => {
             console.log("connected?", connected);
@@ -45,6 +53,8 @@ class Gather {
     getPlayer(playerId) {
         if (playerId in this.game.players) return this.game.players[playerId];
         const savedPlayer = this.db.get("gather").get("players").get(playerId).value();
+        console.log(savedPlayer);
+
         if (savedPlayer != undefined) {
             return savedPlayer;
         } else {
@@ -55,20 +65,5 @@ class Gather {
         }
     }
 }
-
-
-/**** the good stuff ****/
-/*
-game.subscribeToEvent("playerMoves", (data, context) => {
-    console.log(
-        context?.player?.name ?? context.playerId,
-        "moved in direction",
-        data.playerMoves.directiona
-    );
-    console.log(JSON.stringify(data));
-    game.setName(`Fil (${data.playerMoves.x}, ${data.playerMoves.y})`)
-});
-*/
-
 
 module.exports = Gather;

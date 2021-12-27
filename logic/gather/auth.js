@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const JWT_SIGN_SECRET = require('../config.js').JWT_SIGN_SECRET;
-const DEV_ID = require('../config.js').DEV_ID;
+const JWT_SIGN_SECRET = require('../../config.js').JWT_SIGN_SECRET;
+const DEV_ID = require('../../config.js').DEV_ID;
 const userIdentCookie = "tspUserIdentification";
 
 class Auth {

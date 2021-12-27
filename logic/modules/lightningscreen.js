@@ -2,7 +2,7 @@ const fs = require('fs');
 const dir = './static/img/lightning';
 
 class LightningScreen {
-    constructor(app, gather, db, auth, objId) {
+    constructor(app, gather, db, objId) {
         const self = this;
 
         if (!fs.existsSync(dir)){
@@ -21,7 +21,7 @@ class LightningScreen {
         }
 
         // Init Auth
-        auth.registerObject(objId);
+        gather.auth.registerObject(objId);
 
         console.log(`LightningScreen at: /pages/lightning/${objId}`);
 
