@@ -1,0 +1,90 @@
+{
+  "skin": {
+    "id": "BEyC1iiDaoaARIjdAI4e",
+    "previewUrl": "https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/wearables/M1YObnnVknIKuO5wWqZhL",
+    "name": "vitiligo 2",
+    "type": "skin",
+    "isDefault": true,
+    "parts": [
+      {
+        "layerId": "skin front",
+        "spritesheetId": "M8h5xodUHFdMzyhLkcv9"
+      }
+    ],
+    "color": "3"
+  },
+  "hair": {
+    "id": "Pvra6NsY5tRGVO0WRZT0",
+    "type": "hair",
+    "previewUrl": "https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/wearables/Flz5cJ2tTlGu6lEJLydTK",
+    "color": "brown",
+    "isDefault": true,
+    "parts": [
+      {
+        "layerId": "hair front",
+        "spritesheetId": "f9h9IZO2XdpOVkvb8Jc7"
+      }
+    ],
+    "name": "messy"
+  },
+  "facial_hair": null,
+  "top": {
+    "id": "5MrTMy8RSSzqha4zzYnD",
+    "color": "black",
+    "previewUrl": "https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/wearables/Z8ckF_BEj40O_x8x8oR3d",
+    "parts": [
+      {
+        "spritesheetId": "6313mtew3Zh1QX05N717",
+        "layerId": "top front"
+      }
+    ],
+    "name": "sweater",
+    "type": "top",
+    "isDefault": true
+  },
+  "bottom": {
+    "id": "od7urVmfnwcIZqDWQASh",
+    "parts": [
+      {
+        "spritesheetId": "IeTiKgFytOsyQWBrQgAc",
+        "layerId": "bottom front"
+      }
+    ],
+    "type": "bottom",
+    "previewUrl": "https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/wearables/tlKSaxLm5T1NGh9XFr0Q5",
+    "name": "shorts (torn)",
+    "color": "yellow",
+    "isDefault": true
+  },
+  "shoes": {
+    "id": "PkaqFzVEfiTjm99Jk0Ji",
+    "color": "brown",
+    "name": "boots",
+    "isDefault": true,
+    "type": "shoes",
+    "previewUrl": "https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/wearables/OOclEIuvklZmvhuqWNt8T",
+    "parts": [
+      {
+        "spritesheetId": "bjYIM3RJKVm2mwEI3BrQ",
+        "layerId": "shoes front"
+      }
+    ]
+  },
+  "hat": null,
+  "glasses": {
+    "id": "HdS0nV0Y4rKqoDFP5i2b",
+    "color": "black",
+    "parts": [
+      {
+        "spritesheetId": "PkaSuuEBwsEMkU6YXYzz",
+        "layerId": "glasses front"
+      }
+    ],
+    "isDefault": true,
+    "previewUrl": "https://cdn.gather.town/storage.googleapis.com/gather-town.appspot.com/wearables/aomV_Kondnuv4D26VpocG",
+    "type": "glasses",
+    "name": "rectangular"
+  },
+  "other": null,
+  "costume": null
+}

@@ -130,6 +130,10 @@ body {
   50% { border-color: orange }
 }
 
+.gatherAvatar {
+  width: 32px;
+  height: 64px;
+}
 .avatar {
   position: relative;
   margin-left: 10px;

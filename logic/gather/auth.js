@@ -45,7 +45,8 @@ class Auth {
                     player: {
                         id: res.locals.playerId,
                         name: p.name,
-                        outfitString: ("outfitString" in p ? p.outfitString : false)
+                        outfitString: ("outfitString" in p ? p.outfitString : undefined),
+                        avatarUrl: ("avatarUrl" in p ? p.avatarUrl : false)
                     }
                 }).end();
             } else {

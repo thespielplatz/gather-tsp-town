@@ -4,6 +4,7 @@ const API_KEY = require('../../config.js').API_KEY;
 global.WebSocket = require("isomorphic-ws");
 const Auth = require('./auth');
 const web = require('./web');
+const Avatar = require('./avatar');
 
 class Gather {
     static Auth = Auth;
@@ -51,18 +52,32 @@ class Gather {
 
     // Caches the player data
     getPlayer(playerId) {
-        if (playerId in this.game.players) return this.game.players[playerId];
-        const savedPlayer = this.db.get("gather").get("players").get(playerId).value();
-        console.log(savedPlayer);
+        let player = undefined;
 
-        if (savedPlayer != undefined) {
-            return savedPlayer;
-        } else {
-            return {
+        // Get Player from Game
+        if (playerId in this.game.players) {
+            player = this.game.players[playerId];
+        }
+
+        // Get Player from Database
+        if (player === undefined) {
+            player = this.db.get("gather").get("players").get(playerId).value();
+        }
+
+        // Create Avatar Url
+        if (player !== undefined && 'outfitString' in player) {
+            player.avatarUrl = Avatar.makeAvatarUrl(player.outfitString);
+        }
+
+        // Default fallback
+        if (player === undefined) {
+            player = {
                 id: playerId,
                 name: "unknown"
             }
         }
+
+        return player;
     }
 }
 

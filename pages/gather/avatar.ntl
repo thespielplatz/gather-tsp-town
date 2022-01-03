@@ -55,6 +55,7 @@
         <h3>Face Avatar</h3>
         <canvas id="canvasFace" width="50" height="50" style="border: 1px solid gray"></canvas>
         <h3>Player Avatar</h3>
+        <img id="playerAvatar" class="gatherAvatar">
     </main>
 
     <footer class="mt-auto text-white-50">
@@ -76,10 +77,12 @@
         auth.callback = () => {
             if (auth.player.outfitString) {
                 const outfit = JSON.parse(auth.player.outfitString);
+                console.log(auth.player.outfitString);
+
                 // TODO: Refactor to get Image, which can be loaded into img
                 buildFaceAvatar(outfit);
-                // Todo: Build this
-                buildPlayerAvatar(outfit);
+
+                $('#playerAvatar').css("background-image", `url("${auth.player.avatarUrl}")`);
             }
         };
     });
@@ -87,10 +90,6 @@
     function dictNotEmpty(obj) {
         if (obj === false || obj === null || obj === undefined) return false;
         return Object.keys(obj).length !== 0;
-    }
-
-    function buildPlayerAvatar(outfit) {
-        // https://dynamic-assets.gather.town/sprite/avatar-dQCYs4n7O99ksXuBIe33-IeTiKgFytOsyQWBrQgAc-bjYIM3RJKVm2mwEI3BrQ-6313mtew3Zh1QX05N717-PkaSuuEBwsEMkU6YXYzz-f9h9IZO2XdpOVkvb8Jc7.png
     }
 
     function buildFaceAvatar(outfit) {
