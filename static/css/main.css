@@ -131,9 +131,20 @@ body {
 }
 
 .gatherAvatar {
+  /* Original 512px x 64px */
   width: 32px;
   height: 64px;
 }
+
+.gatherAvatar-footer {
+  display: inline-block;
+  width: 23px;
+  height: 24px;
+
+  background-size: 360px 45px;
+  background-position: 0px -14px;
+}
+
 .avatar {
   position: relative;
   margin-left: 10px;

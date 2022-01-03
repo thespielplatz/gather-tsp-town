@@ -70,7 +70,13 @@ $(() => {
         auth.modal.hide();
 
         auth.player = player;
-        $("[data-footer=auth]").text(`Logged In: ${player.name}`);
+        $("[data-footer=auth]").html(`Logged In: ${player.name}<div id="playerAvatar-footer" class="gatherAvatar-footer"></div>`);
+        if ('avatarUrl' in player) {
+            $('#playerAvatar-footer').css("background-image", `url("${player.avatarUrl}")`);
+        } else {
+            $('#playerAvatar-footer').hide();
+        }
+
         console.log(player);
 
         if (auth.callback) auth.callback();
