@@ -22,15 +22,13 @@ class LightningScreen {
 
         console.log(`LightningScreen at: /pages/lightning/${objId}`);
 
-        // Todo: API Auth
-        //this.app.get(`/pages/lightning/${objId}`, gather.auth.apiAuth.bind(gather), (req, res) => {
         this.app.get(`/pages/lightning/${objId}`, (req, res) => {
             res.render("lightning", { title: 'Lightning Wallet',
                 objId: objId
             });
         });
 
-        this.app.get('/api/lightning', (req, res) => {
+        this.app.get('/api/lightning', gather.auth.apiAuth.bind(gather.auth), (req, res) => {
             let data = [];
 
             const wallets = db.get("lightning").value();
@@ -58,7 +56,7 @@ class LightningScreen {
             res.json(data).end();
         });
 
-        this.app.post('/api/lightning', (req, res) => {
+        this.app.post('/api/lightning', gather.auth.apiAuth.bind(gather.auth), (req, res) => {
             console.log(req.body);
             const playerId = req.body.playerId;
 

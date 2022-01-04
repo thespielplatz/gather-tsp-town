@@ -86,6 +86,16 @@ class Auth {
         res.clearCookie(userIdentCookie, { path: '/' })
     }
 
+    apiAuth(req, res, next) {
+        this.checkAuth(req, res, () => {
+            if (res.locals.playerId) {
+                next();
+            } else {
+                res.json({ status: "error", info: "no auth" }).end();
+            }
+        });
+    }
+
     checkAuth(req, res, next) {
         if (!(userIdentCookie in req.cookies)) {
             next();
