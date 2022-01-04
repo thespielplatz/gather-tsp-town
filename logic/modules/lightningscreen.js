@@ -20,11 +20,10 @@ class LightningScreen {
             db.get("lightning").set({}).save();
         }
 
-        // Init Auth
-        gather.auth.registerObject(objId);
-
         console.log(`LightningScreen at: /pages/lightning/${objId}`);
 
+        // Todo: API Auth
+        //this.app.get(`/pages/lightning/${objId}`, gather.auth.apiAuth.bind(gather), (req, res) => {
         this.app.get(`/pages/lightning/${objId}`, (req, res) => {
             res.render("lightning", { title: 'Lightning Wallet',
                 objId: objId

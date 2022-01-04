@@ -91,6 +91,25 @@ body {
   text-align: left;
   color: orange;
 }
+
+iframe::-webkit-scrollbar {
+  display: none;
+}
+
+#theAuthModal .iframe-container {
+  overflow: hidden;
+}
+
+#theAuthModal .modal-iframe {
+ background-color: white;
+  border: 0px none;
+  width:500px;
+  height: 353px;
+  margin-left: -17px;
+  margin-top: -100px;
+}
+
+
 #theAuthModal .header-auth {
   width: 320px;
   overflow: hidden; /* Ensures the content is not revealed until the animation */
