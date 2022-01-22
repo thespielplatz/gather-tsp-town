@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const server = require('./logic/server');
 const app = server.app;
 const db = require('./logic/db.js');

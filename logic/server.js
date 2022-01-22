@@ -1,4 +1,4 @@
-const PORT = 2222;
+const NODE_PORT = process.env.NODE_PORT || 8080
 
 const NAME = require('./../package.json').name;
 const VERSION = require('./../package.json').version;
@@ -87,8 +87,8 @@ const add404 = () => {
 const start = (callback) => {
   add404();
 
-  app.listen(PORT, () => { // Listen on port 3000
-    console.log(`Listening on ${PORT}`); // Log when listen success
+  app.listen(NODE_PORT, () => { // Listen on port 3000
+    console.log(`Listening on ${NODE_PORT}`); // Log when listen success
 
     if (callback != undefined) {
       callback();

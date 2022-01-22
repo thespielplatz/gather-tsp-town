@@ -1,6 +1,3 @@
-const SPACE_ID = require('../../config.js').SPACE_ID;
-const API_KEY = require('../../config.js').API_KEY;
-
 global.WebSocket = require("isomorphic-ws");
 const Auth = require('./auth');
 const web = require('./web');
@@ -32,8 +29,8 @@ class Gather {
     setup() {
         const self = this;
         const {Game} = require("@gathertown/gather-game-client");
-        this.game = new Game(() => Promise.resolve({apiKey: API_KEY}));
-        this.game.connect(SPACE_ID); // replace with your spaceId of choice
+        this.game = new Game(() => Promise.resolve({apiKey: process.env.GATHER_API_KEY}));
+        this.game.connect(process.env.GATHER_SPACE_ID); // replace with your spaceId of choice
 
         this.game.subscribeToConnection((connected) => {
             console.log("connected?", connected);

@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-const JWT_SIGN_SECRET = require('../../config.js').JWT_SIGN_SECRET;
-const DEV_ID = require('../../config.js').DEV_ID;
 const userIdentCookie = "tspUserIdentification";
 
 class Auth {
@@ -55,9 +53,9 @@ class Auth {
             console.log('Cookies: ', req.cookies)
 
             var payload = {
-                playerId: "ewEd2cOdove2tX9NCoTAMqaMxTU2",
+                playerId: process.env.GATHER_DEV_ID,
             }
-            var token = jwt.sign(payload, JWT_SIGN_SECRET);
+            var token = jwt.sign(payload, process.env.JWT_SIGN_SECRET);
 
             res.cookie("tspUserIdentification", token, {
                 secure: true,
@@ -104,7 +102,7 @@ class Auth {
 
         const token = req.cookies[userIdentCookie];
         try {
-            const decoded = jwt.verify(token, JWT_SIGN_SECRET);
+            const decoded = jwt.verify(token, process.env.JWT_SIGN_SECRET);
 
             // Check Payload
             if (!('playerId' in decoded)) {
@@ -114,14 +112,12 @@ class Auth {
 
             const playerId = decoded.playerId;
 
+            // Ignore Developer Id, so development can be done without actually beeing logged in
+            // &&
             // Check if player is online
-            if (!(playerId in this.gather.game.players)) {
-
-                // Ignore Developer Id
-                if (DEV_ID !== playerId) {
-                    console.log(decoded);
-                    throw new Error("player not on server");
-                }
+            if (process.env.DEV_ID !== playerId && !(playerId in this.gather.game.players)) {
+                console.log(decoded);
+                throw new Error("player not on server");
             }
 
             this.gather.updatePlayer(playerId);
