@@ -70,7 +70,7 @@ class Auth {
         const payload = {
             playerId: playerId,
         }
-        const token = jwt.sign(payload, JWT_SIGN_SECRET);
+        const token = jwt.sign(payload, process.env.JWT_SIGN_SECRET);
 
         res.cookie("tspUserIdentification", token, {
             secure: true,
