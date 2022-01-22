@@ -115,7 +115,7 @@ class Auth {
             // Ignore Developer Id, so development can be done without actually beeing logged in
             // &&
             // Check if player is online
-            if (process.env.DEV_ID !== playerId && !(playerId in this.gather.game.players)) {
+            if (playerId != process.env.DEV_ID && this.gather.game.players.playerId != null) {
                 console.log(decoded);
                 throw new Error("player not on server");
             }
