@@ -90,6 +90,10 @@ class Bot {
             },{ scheduled: true, timezone: "Europe/Vienna" });
         });
     }
+
+    start() {
+        this.gather.game.enter(process.env.GATHER_SPACE_ID)
+    }
 }
 
 module.exports = Bot

@@ -6,11 +6,11 @@ const Avatar = require('./avatar');
 class Gather {
     static Auth = Auth;
 
-    constructor(db, app) {
+    constructor(db, app, startCallback) {
         this.db = db;
         this.game = undefined;
 
-        this.setup();
+        this.setup(startCallback);
 
         // Init DB
         if (db.get("gather").value() === undefined) {
@@ -26,7 +26,7 @@ class Gather {
         web(app, this.auth);
     }
 
-    setup() {
+    setup(startCallback) {
         const self = this;
         const {Game} = require("@gathertown/gather-game-client");
         this.game = new Game(() => Promise.resolve({apiKey: process.env.GATHER_API_KEY}));
@@ -34,6 +34,8 @@ class Gather {
 
         this.game.subscribeToConnection((connected) => {
             console.log("connected?", connected);
+
+            if (startCallback) startCallback()
         });
     }
 
