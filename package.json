@@ -2,7 +2,7 @@
   "name": "gather-tsp-town",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +21,7 @@
   "dependencies": {
     "@gathertown/gather-game-client": "^32.0.0",
     "@popperjs/core": "^2.11.0",
+    "axios": "^0.25.0",
     "body-parser": "^1.19.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^14.2.0",
@@ -29,6 +30,7 @@
     "isomorphic-ws": "^4.0.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
+    "node-cron": "^3.0.0",
     "qr-image": "^3.2.0",
     "stormdb": "^0.5.2",
     "ws": "^8.2.1"
