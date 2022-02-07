@@ -76,7 +76,7 @@ class Bot {
     start() {
         this.gather.game.enter(process.env.GATHER_SPACE_ID)
 
-        // Times
+        // Times https://crontab.guru/
         cron.schedule('55 09 * * 1', () => {
             gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Allg. Koordination starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
