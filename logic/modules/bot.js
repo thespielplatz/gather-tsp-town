@@ -77,19 +77,19 @@ class Bot {
         this.gather.game.enter(process.env.GATHER_SPACE_ID)
 
         // Times
-        cron.schedule('40 11 * * 2-4', () => {
-            gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Daily starts in 5 min`)
-        },{ scheduled: true, timezone: "Europe/Vienna" });
-
         cron.schedule('55 09 * * 1', () => {
             gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Allg. Koordination starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
-        cron.schedule('55 09 * * 1', () => {
+        cron.schedule('40 11 * * 2-4', () => {
+            gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Daily starts in 5 min`)
+        },{ scheduled: true, timezone: "Europe/Vienna" });
+
+        cron.schedule('55 09 * * 5', () => {
             gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Sprint Review starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
-        cron.schedule('00 16 * * 1', () => {
+        cron.schedule('00 16 * * 5', () => {
             gather.game.chat("GLOBAL_CHAT", [], "", `🎉 FEIERABEND 🎉 `)
             gather.game.chat("GLOBAL_CHAT", [], "", `Free satoshis for everyone!`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
