@@ -74,24 +74,25 @@ class Bot {
     }
 
     start() {
+        const self = this
         this.gather.game.enter(process.env.GATHER_SPACE_ID)
 
         // Times https://crontab.guru/
         cron.schedule('55 09 * * 1', () => {
-            this.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Allg. Koordination starts in 5 min`)
+            self.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Allg. Koordination starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
         cron.schedule('40 11 * * 2-4', () => {
-            this.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Daily starts in 5 min`)
+            self.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Daily starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
         cron.schedule('55 09 * * 5', () => {
-            this.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Sprint Review starts in 5 min`)
+            self.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Sprint Review starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
         cron.schedule('00 16 * * 5', () => {
-            this.gather.game.chat("GLOBAL_CHAT", [], "", `🎉 FEIERABEND 🎉 `)
-            this.gather.game.chat("GLOBAL_CHAT", [], "", `Free satoshis for everyone!`)
+            self.gather.game.chat("GLOBAL_CHAT", [], "", `🎉 FEIERABEND 🎉 `)
+            self.gather.game.chat("GLOBAL_CHAT", [], "", `Free satoshis for everyone!`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
     }
