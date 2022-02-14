@@ -24,7 +24,7 @@ class Bot {
 
         gather.game.subscribeToEvent("playerChats", (data, context) => {
             if (data.playerChats.senderId == process.env.BOT_ID) return
-            console.log(data)
+            //console.log(data)
 
             // Answer nearby players
             if (data.playerChats.recipient == 'LOCAL_CHAT') {
