@@ -74,23 +74,31 @@ class Bot {
     }
 
     start() {
+        console.log('Setting Up Crons')
+
         const self = this
         this.gather.game.enter(process.env.GATHER_SPACE_ID)
+        this.gather.game.chat("GLOBAL_CHAT", [], "", `Ready to serve! 😎 `)
+
 
         // Times https://crontab.guru/
         cron.schedule('55 09 * * 1', () => {
+            console.log('sending Allg. Koord')
             self.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Allg. Koordination starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
         cron.schedule('40 11 * * 2-4', () => {
+            console.log('sending Daily')
             self.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Daily starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
         cron.schedule('55 09 * * 5', () => {
+            console.log('sending Review')
             self.gather.game.chat("GLOBAL_CHAT", [], "", `ℹ️ Sprint Review starts in 5 min`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
         cron.schedule('00 16 * * 5', () => {
+            console.log('sending Feierabenc')
             self.gather.game.chat("GLOBAL_CHAT", [], "", `🎉 FEIERABEND 🎉 `)
             self.gather.game.chat("GLOBAL_CHAT", [], "", `Free satoshis for everyone!`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
