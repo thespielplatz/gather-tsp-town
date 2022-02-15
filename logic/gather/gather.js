@@ -3,6 +3,8 @@ const Auth = require('./auth');
 const web = require('./web');
 const Avatar = require('./avatar');
 
+let startCallbackFired = false
+
 class Gather {
     static Auth = Auth;
 
@@ -33,9 +35,15 @@ class Gather {
         this.game.connect(process.env.GATHER_SPACE_ID); // replace with your spaceId of choice
 
         this.game.subscribeToConnection((connected) => {
+            if (startCallbackFired) {
+                console.log("re-connected?", connected);
+                return
+            }
+
             console.log("connected?", connected);
 
             if (startCallback) startCallback()
+            startCallbackFired = true
         });
     }
 
