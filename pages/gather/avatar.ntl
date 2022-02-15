@@ -39,7 +39,7 @@
         }
     </style>
 
-    <link href="/static/css/main.css" rel="stylesheet">
+    <link href="/static/css/tsp.css" rel="stylesheet">
 </head>
 
 <body class="d-flex h-100 text-center text-white bg-dark">

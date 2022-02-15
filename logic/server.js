@@ -1,4 +1,4 @@
-const NODE_PORT = process.env.NODE_PORT || 8080
+const PORT = process.env.NODE_PORT || 2222;
 
 const NAME = require('./../package.json').name;
 const VERSION = require('./../package.json').version;
@@ -60,8 +60,12 @@ app.use((req, res, next) => {
   ];
 
   if (!allowedMethods.includes(req.method)) {
-    res.status(405).render("error", { title: "405",
-      'message' : `${req.method} not allowed. 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>` }).end();
+    res.status(405).render("error", {
+      title: "405",
+      message : `${req.method} not allowed. 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>`,
+      name: NAME,
+      version: VERSION,
+    }).end();
     return;
   }
 
@@ -70,7 +74,7 @@ app.use((req, res, next) => {
 
 // Default Route
 app.get('/', (req, res) => {
-  res.render("title", { title: NAME, 'message' : VERSION });
+  res.render("hero-full", { title: NAME, 'version' : VERSION });
 });
 
 app.get('/api/ping', (req, res) => {
@@ -80,21 +84,45 @@ app.get('/api/ping', (req, res) => {
 // Add 404
 const add404 = () => {
   app.use((req, res, next) => {
-    res.status(404).render("error", { title: "404", 'message' : `Page not found 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>` });
+    res.status(404).render("error", {
+      title: "404",
+      message : `Page not found 🤔<br><span style="font-style: normal;">${req.method} ${req.path}</span>`,
+      name: NAME,
+      version: VERSION,
+    });
   });
 }
 
+let server
 const start = (callback) => {
   add404();
 
-  app.listen(NODE_PORT, () => { // Listen on port 3000
-    console.log(`Listening on ${NODE_PORT}`); // Log when listen success
+  server = app.listen(PORT, () => { // Listen on port 3000
+    console.log(`Listening on ${PORT}`); // Log when listen success
 
     if (callback != undefined) {
       callback();
     }
   });
 }
+
+process.on('SIGINT', function() {
+  console.log('SIGINT signal received: closing server ...')
+
+  server.close(() => {
+    console.log('server closed')
+    process.exit(0)
+  })
+})
+
+process.on('SIGTERM', function() {
+  console.log('SIGTERM signal received: closing server ...')
+
+  server.close(() => {
+    console.log('server closed')
+    process.exit(0)
+  })
+})
 
 module.exports = {
   app: app,

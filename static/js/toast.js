@@ -23,6 +23,7 @@ $(() => {
 });
 
 function showToast(data) {
+    return
     let status = "default";
     let message = "I did as you asked!";
 

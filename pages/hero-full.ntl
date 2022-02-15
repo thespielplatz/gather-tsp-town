@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>#title#</title>
+        <meta name="description" content="We make you play!">
+        <meta name="author" content="TheSpielplatz">
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+        <link rel="manifest" href="/static/site.webmanifest">
+
+        <link href="static/lib/bulma/bulma.css" rel="stylesheet">
+        <style>
+            @font-face {
+                font-family: 'Bebas Neue';
+                src: url('/static/fonts/BebasNeue-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+            }
+
+            html {
+                overflow-y: hidden;
+            }
+            body {
+                background: rgb(33,37,41);
+                font-family: 'Bebas Neue', cursive;
+                letter-spacing: 0.5px;
+                box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+            }
+
+            .title.t-xl {
+                font-size: 3rem;
+                text-shadow: 0px 3px 0px #C56200;
+            }
+
+            .subtitle.t-xl {
+                font-size: 2rem;
+                text-shadow: 0px 2px 0px #C56200;
+            }
+
+            .cursor::after{
+                content: "";
+                width: 3px;
+                height: 28px;
+
+                margin-bottom: 2px;
+                margin-left: 4px;
+
+                background: #F7941E;
+                -webkit-animation: blink 0.8s infinite;
+
+            }
+
+            @keyframes blink {
+                0% { opacity: 0 }
+                50% { opacity: 100% }
+                100% { opacity: 0 }
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <section class="hero is-fullheight">
+            <!-- Hero head: will stick at the top -->
+            <div class="hero-head">
+                <nav class="navbar">
+                    <div class="navbar-brand pl-3 pt-1">
+                        <p class="navbar-item title is-4 cursor has-text-white">#title#</p>
+                    </div>
+                    <div class="is-hidden navbar-menu">
+                        <div class="navbar-end">
+                            <a class="navbar-item is-active">
+                                Home
+                            </a>
+                            <a class="navbar-item">
+                                Examples
+                            </a>
+                            <a class="navbar-item">
+                                Documentation
+                            </a>
+                            <span class="navbar-item">
+                              <a class="button is-primary is-inverted">
+                                <span class="icon">
+                                  <i class="fab fa-github"></i>
+                                </span>
+                                <span>Logout</span>
+                              </a>
+                            </span>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Hero content: will be in the middle -->
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <p class="title t-xl has-text-white">Welcome to TheSpielplatz</p>
+                    <p class="subtitle t-xl has-text-white">We make you play!</p>
+                </div>
+            </div>
+
+            <!-- Hero footer: will stick at the bottom -->
+            <div class="hero-foot">
+                <nav class="level">
+                    <div class="level-left">
+                        <div class="level-item pl-2">
+                            <figure class="image is-48x48">
+                                <img width="70" height="40" src="static/img/tsp_70x112.png" alt="TheSpielplatz" scale="0">
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="level-right pr-4">
+                        <p class="level-item has-text-grey">Version: #version#</p>
+                    </div>
+                </nav>
+            </div>
+        </section>
+    </body>
+</html>
+

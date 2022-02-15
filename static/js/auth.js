@@ -28,7 +28,7 @@ $(() => {
 
     $("body").append(authModalHTML);
 
-    auth.modal = new bootstrap.Modal(document.getElementById('theAuthModal'));
+    //auth.modal = new bootstrap.Modal(document.getElementById('theAuthModal'));
 
     auth.startTime = Date.now();
     auth.player = undefined;
@@ -68,7 +68,7 @@ $(() => {
 
     function authSuccess(player) {
         console.log("authSuccess");
-        auth.modal.hide();
+        //auth.modal.hide();
 
         auth.player = player;
         $("[data-footer=auth]").html(`Logged In: ${player.name}<div id="playerAvatar-footer" class="gatherAvatar-footer"></div>`);
