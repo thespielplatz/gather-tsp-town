@@ -1,25 +1,8 @@
+const NAME = require('./package.json').name;
+
 require('dotenv').config()
-
-const instanceId = require("crypto").randomBytes(64).toString('hex')
-const instanceIdShortend = instanceId.substring(0, 4)
-console.log(`InstanceId:${instanceIdShortend} Full:${instanceId}`)
-
-console.log = (() => {
-
-    const time = new Date().toLocaleString("en-AT", { timeZone: "Europe/Vienna" })
-    const orig = console.log
-    return function() {
-        let tmp
-        try {
-            tmp = process.stdout
-            process.stdout = process.stderr
-            arguments[0] = `[${instanceIdShortend}|${time}] ${arguments[0]}`
-            orig.apply(console, arguments);
-        } finally {
-            process.stdout = tmp;
-        }
-    };
-})();
+const Log = require('./logic/log.js')
+Log.init(NAME)
 
 const server = require('./logic/server');
 const app = server.app;
