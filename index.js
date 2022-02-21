@@ -1,9 +1,5 @@
 require('dotenv').config()
 
-/* #######################################################
-#################### CONSOLE OVERRIDE ####################
-####################################################### */
-
 const instanceId = require("crypto").randomBytes(64).toString('hex')
 const instanceIdShortend = instanceId.substring(0, 4)
 console.log(`InstanceId:${instanceIdShortend} Full:${instanceId}`)
@@ -42,8 +38,11 @@ app.get('/ping', (req, res) => {
 const ls = new LightningScreen(app, gather, db,"KWM4F5HtsYYx8-UDKw2Et_60c1358a-0f17-4d0a-9aba-228808aca38e");
 const barbot = new Bot(gather, db)
 
+// Alarm Screen: t7E-faVNb4g77fhMzUWgm_2a32a6a6-5a74-429b-8ef2-fa2e177d36f5
+
 function startCallback() {
     barbot.start()
+    // gather.showInteractionEvents()
 }
 
 server.start(() => {

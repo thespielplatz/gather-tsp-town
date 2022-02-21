@@ -94,35 +94,51 @@ const add404 = () => {
 }
 
 let server
-const start = (callback) => {
+let shutdownCallback
+let connections = [];
+
+const start = (callback, shutdownCallback_) => {
+  shutdownCallback = shutdownCallback_
+
   add404();
 
   server = app.listen(PORT, () => { // Listen on port 3000
-    console.log(`Listening on ${PORT}`); // Log when listen success
+    console.log(`Express Listening on ${PORT}`) // Log when listen success
+
+    server.on('connection', connection => {
+      connections.push(connection)
+      connection.on('close', () => connections = connections.filter(curr => curr !== connection));
+    })
 
     if (callback != undefined) {
-      callback();
+      callback()
     }
-  });
+  })
 }
 
-process.on('SIGINT', function() {
-  console.log('SIGINT signal received: closing server ...')
+process.on('SIGTERM', shutDown);
+process.on('SIGINT', shutDown);
+
+function shutDown() {
+  console.log('Received kill signal, shutting down gracefully');
+
+  if (shutdownCallback) shutdownCallback()
 
   server.close(() => {
-    console.log('server closed')
-    process.exit(0)
-  })
-})
+    console.log('Closed out remaining connections');
+    process.exit(0);
+  });
 
-process.on('SIGTERM', function() {
-  console.log('SIGTERM signal received: closing server ...')
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 10000);
 
-  server.close(() => {
-    console.log('server closed')
-    process.exit(0)
-  })
-})
+  connections.forEach(curr => curr.end());
+  setTimeout(() => connections.forEach(curr => curr.destroy()), 5000);
+}
+
+
 
 module.exports = {
   app: app,

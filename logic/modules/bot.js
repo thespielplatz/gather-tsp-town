@@ -48,6 +48,11 @@ class Bot {
                 return
             }
 
+            if (data.playerChats.contents.startsWith('/beepfil')) {
+                gather.game.playSound("https://tools.thespielplatz.com/staticassets/sounds/alarm_beep.mp3", 1.0, "ewEd2cOdove2tX9NCoTAMqaMxTU2")
+                return
+            }
+
             switch (data.playerChats.contents) {
                 case '/fireworks':
                     gather.game.shootConfetti(process.env.BOT_ID)
@@ -78,8 +83,7 @@ class Bot {
 
         const self = this
         this.gather.game.enter(process.env.GATHER_SPACE_ID)
-        this.gather.game.chat("GLOBAL_CHAT", [], "", `Ready to serve! 😎 `)
-
+        if (process.env.DEV !== 'true') this.gather.game.chat("GLOBAL_CHAT", [], "", `Ready to serve! 😎 `)
 
         // Times https://crontab.guru/
         cron.schedule('55 09 * * 1', () => {
@@ -103,6 +107,10 @@ class Bot {
             self.gather.game.chat("GLOBAL_CHAT", [], "", `Free satoshis for everyone!`)
         },{ scheduled: true, timezone: "Europe/Vienna" });
 
+    }
+
+    say(text, chatRecipient) {
+        self.gather.game.chat(chatRecipient, [], "", text)
     }
 }
 

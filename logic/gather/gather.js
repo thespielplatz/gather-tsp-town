@@ -86,6 +86,17 @@ class Gather {
 
         return player;
     }
+
+    showInteractionEvents() {
+        const self = this
+        this.game.subscribeToEvent("playerInteracts", (data, context) => {
+            // let's see what happened first
+            console.log(context?.player?.name + " interacted with " + data.playerInteracts.objId);
+
+            // magic, fills mapObject with data that looks like the obj we made above. this is the object the person interacted with
+            let mapObject = self.game.getObject(data.playerInteracts.objId).obj
+        })
+    }
 }
 
 module.exports = Gather;
