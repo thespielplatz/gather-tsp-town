@@ -51,8 +51,6 @@ class Gather {
         const player = this.game.players[playerId];
         console.log("update player")
         if (player === undefined) return;
-        console.log(player);
-        console.log(typeof player);
 
         this.db.get("gather").get("players").get(playerId).set(this.game.players[playerId]).save();
     }

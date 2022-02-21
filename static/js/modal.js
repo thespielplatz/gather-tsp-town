@@ -1,38 +1,43 @@
-var theModal, theModalCallback;
+let Modal = {}
 
-$(() => {
-    const html = `<div id="theModal" class="modal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" action="save">Save</button>
-      </div>
-    </div>
-  </div>
-</div>`;
+Modal.show = (modalId) => {
+    const $el = document.getElementById(modalId);
+    if ($el) $el.classList.add('is-active');
+}
 
-    $("body").append(html);
-    theModal = new bootstrap.Modal(document.getElementById('theModal'));
-    $("#theModal .modal-footer [action=save]").click(() => {
-        console.log("save");
-        theModal.hide();
-        if (theModalCallback) theModalCallback();
-        theModalCallback = undefined;
+Modal.close = (modalId) => {
+    const $el = document.getElementById(modalId);
+    if ($el) Modal.closeByEl($el)
+}
+
+Modal.closeByEl = ($el) => {
+    if ($el) $el.classList.remove('is-active');
+}
+
+Modal.closeAll = () => {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+        Modal.close($modal);
     });
-});
+}
 
-function showModal(title, body, callback) {
-    $(".modal-title").text(title);
-    $(".modal-body").html(body);
-    theModalCallback = callback;
+Modal.init = (modalId) => {
+    const $el = document.getElementById(modalId);
 
-    theModal.show();
+    // Add a click event on various child elements to close the parent modal
+    ($el.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+        const $target = $close.closest('.modal');
+        $close.addEventListener('click', () => {
+            Modal.closeByEl($target);
+        });
+    });
+
+    // Add a keyboard event to close all modals
+    document.addEventListener('keydown', (event) => {
+        const e = event || window.event;
+
+        if (e.keyCode === 27) { // Escape key
+            Modal.closeAll()
+        }
+    });
 }
 

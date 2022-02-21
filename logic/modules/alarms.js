@@ -1,4 +1,5 @@
-const fs = require("fs");
+const cron = require("node-cron");
+const crypto = require('crypto');
 
 class Alarms {
     constructor(app, gather, db, objId) {
@@ -7,72 +8,74 @@ class Alarms {
         this.app = app
         this.gather = gather
         this.db = db
+        this.alarms = []
 
         this.bot = undefined
 
         // Init DB
-        if (db.get("alarms").value() === undefined) {
-            db.get("alarms").set({}).save();
+        if (db.get("alarmsregistered").value() === undefined) {
+            db.get("alarmsregistered").set({}).save();
         }
 
         console.log(`AlarmScreen at: /pages/alarms/${objId}`);
 
-        this.app.get(`/pages/alarms/${objId}`, (req, res) => {
-            res.render("alarms", { title: 'Alarms',
+        app.get(`/pages/alarms/${objId}`, (req, res) => {
+            res.render("alarms", {
+                title: 'Alarms',
                 objId: objId
             });
         });
-/*
-        this.app.get('/api/lightning', gather.auth.apiAuth.bind(gather.auth), (req, res) => {
-            let data = [];
 
-            const wallets = db.get("lightning").value();
-            Object.keys(wallets).forEach((playerId) => {
-                const p = self.gather.getPlayer(playerId);
-                const w = wallets[playerId];
+        app.get('/api/alarms', gather.auth.apiAuth.bind(gather.auth), (req, res) => {
+            const playerId = res.locals.playerId
 
-                let name = w.name;
-                // Player online
-                if (p !== undefined) {
-                    name = p.name;
-
-                    // Save Online name to DB
-                    db.get("lightning").get(playerId).get("name").set(p.name).save();
-                }
-
-                data.push({
-                    playerId: playerId,
-                    player: name,
-                    outfitString: ("outfitString" in p ? p.outfitString : false),
-                    wallet: w.webpath
-                });
-            });
-
+            const data = self.alarms.map(alarm => {
+                let value = {...alarm}
+                value.on = db.get("alarmsregistered").get(alarm.key).get(playerId).value() == true
+                return value
+            })
             res.json(data).end();
         });
 
-        this.app.post('/api/lightning', gather.auth.apiAuth.bind(gather.auth), (req, res) => {
-            console.log(req.body);
-            const playerId = req.body.playerId;
+        app.post('/api/alarms', gather.auth.apiAuth.bind(gather.auth), (req, res) => {
+            const playerId = res.locals.playerId
 
-            const QR = require('qr-image');
-
-            const image = QR.image(req.body.wallet, { type: 'png' });
-            const filepath = dir + '/' + playerId + ".png";
-            image.pipe(require('fs').createWriteStream(filepath));
-
-            const webpath = filepath.substr(1);
-            self.db.get("lightning").get(playerId).set({
-                name: self.gather.getPlayer(playerId).name,
-                timestamp: Date.now(),
-                webpath: webpath
-            }).save();
-
-            res.json({ status: "success", message: "Wallet saved!"}).end();
+            db.get("alarmsregistered").get(req.body.key).get(playerId).set(req.body.on == "true")
+            db.save()
+            res.json({status: "ok"}).end();
         });
     }
- */
+
+    setBot(theBot) {
+        this.bot = theBot
+    }
+
+    addAlarm(alarm) {
+        const self = this
+
+        alarm.key = crypto.createHash('md5').update(alarm.name).digest('hex')
+        this.alarms.push(alarm)
+
+        if (!this.db.get("alarmsregistered").get(alarm.key).value()) {
+            this.db.get("alarmsregistered").get(alarm.key).set({})
+        }
+
+        cron.schedule(alarm.cron, () => {
+            console.log(`Sending: ${alarm.name}`)
+            if (self.bot) self.bot.say("GLOBAL_CHAT", alarm.chat)
+
+            const players = self.db.get("alarmsregistered").get(alarm.key).value()
+            Object.keys(players).forEach(playerId => {
+                if (players[playerId] == true) {
+                    self.bot.say(playerId, alarm.chat)
+                    self.gather.game.playSound("https://tools.thespielplatz.com/staticassets/sounds/alarm_beep.mp3",
+                        1.0,
+                        playerId)
+                }
+            })
+        },{ scheduled: true, timezone: "Europe/Vienna" });
+    }
 }
 
 
-module.exports = Alarms;
+module.exports = Alarms

@@ -35,7 +35,7 @@
             font-family: 'PressStart2P';
             color: #color#;
             margin: 0;
-            background-color:black;
+            background-color:#background#;
         }
 
         #main{
@@ -69,5 +69,8 @@
         <h1>#title#</h1>
     </div>
 </div>
+<script>
+    window.close();
+</script>
 </body>
 </html>

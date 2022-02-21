@@ -2,9 +2,10 @@ let prefix = ""
 
 console.log = (() => {
 
-    const time = new Date().toLocaleString("en-AT", { timeZone: "Europe/Vienna" })
     const orig = console.log
     return function() {
+        const time = new Date().toLocaleString("en-AT", { timeZone: "Europe/Vienna" })
+
         let tmp
         try {
             tmp = process.stdout

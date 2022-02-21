@@ -33,9 +33,17 @@ class Auth {
         app.get('/auth/auth/', (req, res) => {
             if ('gatherPlayerId' in req.query) {
                 self.setAuth(req, res, req.query.gatherPlayerId);
-                res.render("gather/auth/result", { title: 'Authenticated', color: "#138600"});
+                res.render("gather/auth/result", {
+                    title: 'Authenticated',
+                    color: "#138600",
+                    background: 'white'
+                });
             } else {
-                res.render("gather/auth/result", { title: 'Auth Error', color: "#f87416"});
+                res.render("gather/auth/result", {
+                    title: 'Auth Error',
+                    color: "#f87416",
+                    background: 'white'
+                });
             }
         });
 

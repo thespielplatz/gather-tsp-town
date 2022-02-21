@@ -7,6 +7,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const favicon = require('express-favicon');
+const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
+
 const fs = require('fs');
 
 const app = express();
@@ -17,6 +19,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
+
+app.use(expressCspHeader({
+  directives: {
+    'frame-src': [SELF, 'app.gather.town', 'gather.town', 'www.native.fm', 'rtr-web.herokuapp.com', 'venue.virtualchair.net', 'meetingland.de',
+      'www.meetingland.de', 'uncork-it-gather.com', 'escape.uncork-it.com'],
+    'frame-ancestors' : [SELF, 'www.native.fm', 'rtr-web.herokuapp.com', 'venue.virtualchair.net', 'meetingland.de',
+      'www.meetingland.de', 'uncork-it-gather.com', 'escape.uncork-it.com']
+  }
+}));
+
 
 // Template Engine
 app.engine('ntl', function (filePath, options, callback) { // define the template engine

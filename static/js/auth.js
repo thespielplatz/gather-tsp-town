@@ -3,47 +3,55 @@ let tsp = {};
 let auth = {};
 
 $(() => {
-    const authModalHTML = `<div id="theAuthModal" class="modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div data-auth="header" class="modal-header">
-        <p class="header-auth">Authentification&nbsp;</p>
-      </div>
-      <div data-auth="body" class="modal-body">
+    const authModalHTML = `
+<div id="theAuthModal" class="modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head" style="background-color: #C56200; color:white;">
+      <p class="modal-card-title has-text-white">Authentification&nbsp;</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+        <a class="button" href="" target="_blank" data-auth="button">Open Authentification</a>
+    <!--
       <div class="iframe-container">
-        <iframe class="modal-iframe" data-auth="iframe" scrolling="no"
-        title="GatherAuth">
+        <iframe class="modal-iframe" data-auth="iframe" scrolling="no" title="GatherAuth">
         </iframe>
-        </div>
       </div>
-    </div>
+    </section>
+    -->
+    <!--
+    <footer class="modal-card-foot">
+      <button class="button is-success">Save changes</button>
+      <button class="button">Cancel</button>
+    </footer>
+    -->
   </div>
-</div>`;
-
+</div>
+`;
     // Surrounding Page
     $("[data-footer=auth]").text("Status: Who are you?");
 
     // Auth Modal
     auth.objId = $("#objId").val();
 
-    $("body").append(authModalHTML);
-
-    //auth.modal = new bootstrap.Modal(document.getElementById('theAuthModal'));
-
-    auth.startTime = Date.now();
     auth.player = undefined;
     auth.interval = 500;
     auth.callback = undefined;
 
     function authenticate() {
-        auth.modal.show();
+        $("body").append(authModalHTML);
+        Modal.init('theAuthModal')
+        Modal.show('theAuthModal')
 
         // Load iFrame with https://gather.town/getPublicId?redirectTo=
         // https://gathertown.notion.site/Gather-Identity-Linking-5e4e94bc095244eb9fcc3218babe855e
+
         const returnUrl = encodeURIComponent(window.location.origin + '/auth/auth?')
         const iframeUrl = `https://gather.town/getPublicId?redirectTo=${returnUrl}`;
-        $("[data-auth=iframe]").attr("src", iframeUrl);
-
+        //$("[data-auth=iframe]").attr("src", iframeUrl);
+        console.log(iframeUrl)
+        $("[data-auth=button]").attr("href", iframeUrl);
         const intervalId = setInterval(() => {
             $.get(`/auth/isidentified`, (data) => {
                 console.log(data);
@@ -68,7 +76,7 @@ $(() => {
 
     function authSuccess(player) {
         console.log("authSuccess");
-        //auth.modal.hide();
+        Modal.close('theAuthModal')
 
         auth.player = player;
         $("[data-footer=auth]").html(`Logged In: ${player.name}<div id="playerAvatar-footer" class="gatherAvatar-footer"></div>`);
