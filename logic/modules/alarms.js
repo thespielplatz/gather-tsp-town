@@ -22,7 +22,8 @@ class Alarms {
         app.get(`/pages/alarms/${objId}`, (req, res) => {
             res.render("alarms", {
                 title: 'Alarms',
-                objId: objId
+                objId: objId,
+                siteurl: `/pages/alarms/${objId}`
             });
         });
 

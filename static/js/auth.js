@@ -11,8 +11,8 @@ $(() => {
       <p class="modal-card-title has-text-white">Authentification&nbsp;</p>
       <button class="delete" aria-label="close"></button>
     </header>
-    <section class="modal-card-body">
-        <a class="button" href="" target="_blank" data-auth="button">Open Authentification</a>
+    <section class="modal-card-body has-text-centered">
+        <a class="button" href="" data-auth="button">Open Gather Authentification</a>
     <!--
       <div class="iframe-container">
         <iframe class="modal-iframe" data-auth="iframe" scrolling="no" title="GatherAuth">
@@ -38,6 +38,7 @@ $(() => {
     auth.player = undefined;
     auth.interval = 500;
     auth.callback = undefined;
+    auth.redirectUrl = ""
 
     function authenticate() {
         $("body").append(authModalHTML);
@@ -47,11 +48,15 @@ $(() => {
         // Load iFrame with https://gather.town/getPublicId?redirectTo=
         // https://gathertown.notion.site/Gather-Identity-Linking-5e4e94bc095244eb9fcc3218babe855e
 
-        const returnUrl = encodeURIComponent(window.location.origin + '/auth/auth?')
-        const iframeUrl = `https://gather.town/getPublicId?redirectTo=${returnUrl}`;
+        const returnUrl = encodeURIComponent(`${window.location.origin}/auth/auth?redirect=${auth.redirectUrl}&`)
+        //const iframeUrl = `https://gather.town/getPublicId?redirectTo=${returnUrl}`;
+        //const iframeUrl = `https://app.gather.town/getPublicId?redirectTo=${returnUrl}`;
+        const iframeUrl = `https://app.gather.town/getPublicId?redirectTo=${returnUrl}`;
         //$("[data-auth=iframe]").attr("src", iframeUrl);
-        console.log(iframeUrl)
+
+        //console.log(iframeUrl)
         $("[data-auth=button]").attr("href", iframeUrl);
+
         const intervalId = setInterval(() => {
             $.get(`/auth/isidentified`, (data) => {
                 console.log(data);

@@ -64,13 +64,23 @@
 </head>
 
 <body>
+<input type="hidden" id="success" value="#success#">
 <div id="main">
     <div class="fof">
         <h1>#title#</h1>
     </div>
 </div>
 <script>
-    window.close();
+    if (document.getElementById("success").value == 'true') {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        if (urlParams.get('redirect')) {
+            window.location.href = urlParams.get('redirect')
+        }
+        if (urlParams.get('autoclose')) {
+            window.close();
+        }
+    }
 </script>
 </body>
 </html>

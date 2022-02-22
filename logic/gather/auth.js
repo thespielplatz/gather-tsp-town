@@ -36,13 +36,15 @@ class Auth {
                 res.render("gather/auth/result", {
                     title: 'Authenticated',
                     color: "#138600",
-                    background: 'white'
+                    background: 'white',
+                    success: 'true'
                 });
             } else {
                 res.render("gather/auth/result", {
                     title: 'Auth Error',
                     color: "#f87416",
-                    background: 'white'
+                    background: 'white',
+                    success: 'false'
                 });
             }
         });
