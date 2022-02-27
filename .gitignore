@@ -107,3 +107,4 @@ db.stormdb
 *.stormdb
 .DS_Store
 /data/*
+/config/*

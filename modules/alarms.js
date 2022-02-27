@@ -22,8 +22,6 @@ class Alarms {
 
         this.registered = db.get("alarms").get(alarmId)
 
-        console.log(`AlarmScreen at: /pages/${alarmId}`);
-
         const router = express.Router()
         this.router = router
 
