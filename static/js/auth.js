@@ -48,17 +48,19 @@ $(() => {
         // Load iFrame with https://gather.town/getPublicId?redirectTo=
         // https://gathertown.notion.site/Gather-Identity-Linking-5e4e94bc095244eb9fcc3218babe855e
 
-        const returnUrl = encodeURIComponent(`${window.location.origin}/auth/auth?redirect=${auth.redirectUrl}&`)
+        const returnUrl = encodeURIComponent(`${window.location.origin}/gather/auth/auth?redirect=${window.location.pathname}&`)
         //const iframeUrl = `https://gather.town/getPublicId?redirectTo=${returnUrl}`;
         //const iframeUrl = `https://app.gather.town/getPublicId?redirectTo=${returnUrl}`;
         const iframeUrl = `https://app.gather.town/getPublicId?redirectTo=${returnUrl}`;
+        console.log(auth.redirectUrl)
+        console.log(iframeUrl)
         //$("[data-auth=iframe]").attr("src", iframeUrl);
 
         //console.log(iframeUrl)
         $("[data-auth=button]").attr("href", iframeUrl);
 
         const intervalId = setInterval(() => {
-            $.get(`/auth/isidentified`, (data) => {
+            $.get(`/gather/auth/isidentified`, (data) => {
                 console.log(data);
                 if (data.status === "ok") {
                     authSuccess(data.player);
@@ -69,7 +71,7 @@ $(() => {
         }, auth.interval);
     }
 
-    $.get(`/auth/isidentified`, (data) => {
+    $.get(`/gather/auth/isidentified`, (data) => {
         console.log(data);
         if (data.status === "ok") {
             authSuccess(data.player)

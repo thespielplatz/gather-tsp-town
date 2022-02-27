@@ -4,7 +4,6 @@ const Avatar = require('./avatar');
 const db = require('../db')
 const express = require("express");
 
-
 let startCallbackFired = false
 
 class Gather {

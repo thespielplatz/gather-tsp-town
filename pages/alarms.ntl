@@ -156,13 +156,12 @@
                 audio.play();
             })
 
-            auth.redirectUrl = $('#siteurl').val()
             auth.callback = () => {
                 console.log("Auth!")
                 $('[data-section=noauth]').addClass('is-hidden')
                 $('[data-section=auth]').removeClass('is-hidden')
 
-                $.get('/api/alarms').done(alarms => {
+                $.get(window.location.pathname + '/api').done(alarms => {
                     console.log(alarms)
 
                     alarms.forEach(alarm => {
@@ -179,7 +178,7 @@
 
                         on = !on
 
-                        $.post('/api/alarms', { key, on }).done(data => {
+                        $.post(window.location.pathname + '/api', { key, on }).done(data => {
                             $(this).removeClass('is-success')
                             $(this).removeClass('is-light')
 
