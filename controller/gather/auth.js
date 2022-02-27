@@ -1,8 +1,12 @@
 const jwt = require('jsonwebtoken');
 const userIdentCookie = "tspUserIdentification";
+const db = require('../db')
+const express = require("express");
+
+
 
 class Auth {
-    constructor(app, gather, db) {
+    constructor(gather) {
         const self = this;
         this.gather = gather;
 
@@ -13,7 +17,10 @@ class Auth {
             }).save();
         }
 
-        app.get('/auth/isidentified/', self.checkAuth.bind(self), (req, res) => {
+        const router = express.Router()
+        this.router = router
+
+        router.get('/isidentified/', self.checkAuth.bind(self), (req, res) => {
             if (res.locals.playerId) {
                 const p = gather.getPlayer(res.locals.playerId);
 
@@ -30,7 +37,7 @@ class Auth {
             }
         });
 
-        app.get('/auth/auth/', (req, res) => {
+        router.get('/auth/', (req, res) => {
             if ('gatherPlayerId' in req.query) {
                 self.setAuth(req, res, req.query.gatherPlayerId);
                 res.render("gather/auth/result", {
@@ -49,17 +56,17 @@ class Auth {
             }
         });
 
-        app.get('/auth/delauth', (req, res) => {
+        router.get('/delauth', (req, res) => {
             self.delAuth(req, res);
             res.json({ status: "ok" }).end();
         });
 
-        app.get('/auth/info', (req, res) => {
+        router.get('/info', (req, res) => {
             console.log('Cookies: ', req.cookies)
             res.send(JSON.stringify(req.cookies)).end();
         });
 
-        app.get('/auth/setfil', (req, res) => {
+        router.get('/setfil', (req, res) => {
             console.log('Cookies: ', req.cookies)
 
             var payload = {

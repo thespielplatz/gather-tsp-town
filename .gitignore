@@ -103,8 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
-/config.js
 db.stormdb
 *.stormdb
 .DS_Store
-.DS_Store
+/config/*

@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
     <link rel="manifest" href="/static/site.webmanifest">
 
-    <link href="static/lib/bulma/bulma.css" rel="stylesheet">
+    <link href="/static/lib/bulma/bulma.css" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'Bebas Neue';

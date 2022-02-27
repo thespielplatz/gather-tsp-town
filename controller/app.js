@@ -1,5 +1,3 @@
-const PORT = process.env.NODE_PORT || 2222;
-
 const NAME = require('./../package.json').name;
 const VERSION = require('./../package.json').version;
 
@@ -11,6 +9,7 @@ const favicon = require('express-favicon');
 const fs = require('fs');
 
 const app = express();
+
 app.use(favicon(__dirname + '/../static/img/favicon.png'));
 app.use('/static', express.static('static'));
 
@@ -43,7 +42,7 @@ app.set('view engine', 'ntl') // register the template engine
 
 // -----------------------> Logging
 app.use((req, res, next) => {
-  console.log(`${req.method}:${req.url} ${res.statusCode}`);
+  if (process.env.DEV === 'true') console.log(`${req.method}:${req.url} ${res.statusCode}`);
   next();
 });
 
@@ -73,15 +72,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Default Route
-app.get('/', (req, res) => {
-  res.render("hero-full", { title: NAME, 'version' : VERSION });
-});
-
-app.get('/api/ping', (req, res) => {
-  res.json({ status: "ok", message: "pong" }).end();
-});
-
 // Add 404
 const add404 = () => {
   app.use((req, res, next) => {
@@ -98,23 +88,39 @@ let server
 let shutdownCallback
 let connections = [];
 
-const start = (callback, shutdownCallback_) => {
-  shutdownCallback = shutdownCallback_
+const _listen = app.listen
 
-  add404();
+app.setShutdownCallback = (shutdownCallback_) => { shutdownCallback = shutdownCallback_ }
 
-  server = app.listen(PORT, () => { // Listen on port 3000
-    console.log(`Express Listening on ${PORT}`) // Log when listen success
+app.listen = function () {
+  // Handle listen callback, if it's there
+  let startCallback
 
+  const lastIndex = (arguments.length - 1).toString()
+
+  if (typeof arguments[lastIndex] === 'function') {
+    startCallback = arguments[lastIndex]
+    delete arguments[lastIndex]
+    arguments.length--
+  }
+
+  // add own listen callback
+  arguments[arguments.length] = () => {
     server.on('connection', connection => {
       connections.push(connection)
       connection.on('close', () => connections = connections.filter(curr => curr !== connection));
     })
 
-    if (callback != undefined) {
-      callback()
-    }
-  })
+    if (startCallback) startCallback()
+  }
+  arguments.length++
+
+  // Add 404 error route at the end
+  add404();
+
+  server = _listen.apply(app, arguments)
+
+  return server
 }
 
 process.on('SIGTERM', shutDown);
@@ -139,9 +145,4 @@ function shutDown() {
   setTimeout(() => connections.forEach(curr => curr.destroy()), 5000);
 }
 
-
-
-module.exports = {
-  app: app,
-  start
-}
+module.exports = app

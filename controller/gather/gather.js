@@ -1,18 +1,17 @@
 global.WebSocket = require("isomorphic-ws");
 const Auth = require('./auth');
-const web = require('./web');
 const Avatar = require('./avatar');
+const db = require('../db')
+const express = require("express");
+
 
 let startCallbackFired = false
 
 class Gather {
     static Auth = Auth;
 
-    constructor(db, app, startCallback) {
-        this.db = db;
+    constructor(startCallback) {
         this.game = undefined;
-
-        this.setup(startCallback);
 
         // Init DB
         if (db.get("gather").value() === undefined) {
@@ -22,17 +21,23 @@ class Gather {
         }
 
         // Init Auth
-        this.auth = new Auth(app, this, db);
+        this.auth = new Auth(this);
 
-        // Help Routes
-        web(app, this.auth);
+        // routes
+        const router = express.Router()
+        router.use('/auth', this.auth.router)
+
+        this.router = router
+
+        // Connect with Gather
+        this.init(startCallback);
     }
 
-    setup(startCallback) {
+    init(startCallback) {
         const self = this;
         const {Game} = require("@gathertown/gather-game-client");
-        this.game = new Game(() => Promise.resolve({apiKey: process.env.GATHER_API_KEY}));
-        this.game.connect(process.env.GATHER_SPACE_ID); // replace with your spaceId of choice
+        this.game = new Game(process.env.GATHER_SPACE_ID, () => Promise.resolve({apiKey: process.env.GATHER_API_KEY}));
+        this.game.connect();
 
         this.game.subscribeToConnection((connected) => {
             if (startCallbackFired) {
@@ -52,7 +57,7 @@ class Gather {
         console.log("update player")
         if (player === undefined) return;
 
-        this.db.get("gather").get("players").get(playerId).set(this.game.players[playerId]).save();
+        db.get("gather").get("players").get(playerId).set(this.game.players[playerId]).save();
     }
 
     // Caches the player data
@@ -66,7 +71,7 @@ class Gather {
 
         // Get Player from Database
         if (player === undefined) {
-            player = this.db.get("gather").get("players").get(playerId).value();
+            player = db.get("gather").get("players").get(playerId).value();
         }
 
         // Create Avatar Url

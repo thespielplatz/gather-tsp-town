@@ -1,27 +1,46 @@
-const NAME = require('./package.json').name;
-
 require('dotenv').config()
-const Log = require('./logic/log.js')
+
+const {version: VERSION, name: NAME} = require("./package.json");
+const NODE_PORT = process.env.NODE_PORT || 2222;
+
+const Log = require('./controller/log.js')
 Log.init(NAME)
 
-const server = require('./logic/server');
-const app = server.app;
-const db = require('./logic/db.js');
-const Gather = require('./logic/gather/gather');
+const Gather = require('./controller/gather/gather');
+const Bot = require('./modules/bot')
 
-const LightningScreen = require('./logic/modules/lightningscreen')
-const Bot = require('./logic/modules/bot')
-const Alarms = require('./logic/modules/alarms')
+const gather = new Gather(() => {
+    bot.enter()
+    // gather.showInteractionEvents()
+})
+
+const bot = new Bot(gather)
+
+const app = require('./controller/app');
+
+const defaultRouter = require('./controller/default')
+
+app.use('/', defaultRouter)
+app.use('/gather', gather.router)
+
+app.listen(NODE_PORT,() => {
+    console.log(`Starting on NODE_PORT: ${NODE_PORT}`)
+})
+
+
+/*
+
+const LightningScreen = require('./controller/modules/lightningscreen')
+const Alarms = require('./controller/modules/alarms')
 const cron = require("node-cron");
-const gather = new Gather(db, app, startCallback);
-
-
-app.get('/ping', (req, res) => {
-    res.json("pong").end();
+const gather = new Gather(db, app, () => {
+    barbot.start()
+    // gather.showInteractionEvents()
 });
 
+
+
 const ls = new LightningScreen(app, gather, db,"KWM4F5HtsYYx8-UDKw2Et_60c1358a-0f17-4d0a-9aba-228808aca38e");
-const barbot = new Bot(gather, db)
 const alarm = new Alarms(app, gather, db, 't7E-faVNb4g77fhMzUWgm_2a32a6a6-5a74-429b-8ef2-fa2e177d36f5')
 alarm.setBot(barbot)
 
@@ -47,12 +66,6 @@ alarm.addAlarm({
     chat: '🎉 FEIERABEND 🎉\nFree satoshis for everyone!'
 })
 
-function startCallback() {
-    barbot.start()
-    // gather.showInteractionEvents()
-}
 
-server.start(() => {
-    console.log("go!");
-});
 
+*/

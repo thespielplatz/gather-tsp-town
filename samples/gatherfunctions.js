@@ -1,4 +1,4 @@
-const avatar = require('../logic/gather/avatar');
+const avatar = require('../controller/gather/avatar');
 let outfitString, url;
 
 const myOutFitUrl = 'https://dynamic-assets.gather.town/sprite/avatar-M8h5xodUHFdMzyhLkcv9-IeTiKgFytOsyQWBrQgAc-bjYIM3RJKVm2mwEI3BrQ-6313mtew3Zh1QX05N717-PkaSuuEBwsEMkU6YXYzz-f9h9IZO2XdpOVkvb8Jc7.png';

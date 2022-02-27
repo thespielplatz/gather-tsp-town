@@ -11,15 +11,11 @@ you can whisper me the following commands:
 /fireworks
 `
 
-// Register for ring before meetings
-//                     gather.game.ring(data.playerChats.senderId)
-
 class Bot {
-    constructor(gather, db) {
+    constructor(gather) {
         const self = this
 
         this.gather = gather
-        this.db = db
 
         gather.game.subscribeToEvent("playerChats", (data, context) => {
             if (data.playerChats.senderId == process.env.BOT_ID) return
@@ -77,7 +73,7 @@ class Bot {
         });
     }
 
-    start() {
+    enter() {
         this.gather.game.enter(process.env.GATHER_SPACE_ID)
         if (process.env.DEV !== 'true') this.gather.game.chat("GLOBAL_CHAT", [], "", `Ready to serve! 😎 `)
     }

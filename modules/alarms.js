@@ -2,10 +2,10 @@ const cron = require("node-cron");
 const crypto = require('crypto');
 
 class Alarms {
-    constructor(app, gather, db, objId) {
+    constructor(gather, db, objId) {
         const self = this
 
-        this.app = app
+        this.router =
         this.gather = gather
         this.db = db
         this.alarms = []
