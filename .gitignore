@@ -106,4 +106,4 @@ dist
 db.stormdb
 *.stormdb
 .DS_Store
-/config/*
+/data/*

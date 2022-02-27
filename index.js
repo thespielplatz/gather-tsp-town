@@ -27,7 +27,7 @@ const bot = new Bot(gather)
 const Alarms = require('./modules/alarms')
 const alarm = new Alarms(gather, '0001')
 alarm.setBot(bot)
-alarm.import('./config/alarms.json')
+alarm.import(`../${process.env.DATA_PATH || '.'}alarms.json`)
 app.use('/alarms', alarm.router)
 
 // Spin up express

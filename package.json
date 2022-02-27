@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "copydata": "rsync -avz --omit-dir-times --no-perms --include=\"*.json\" --exclude=\"*\" data/ TSPServer:/home/pm2/gather-tsp-town/data"
   },
   "repository": {
     "type": "git",

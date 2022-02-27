@@ -59,8 +59,10 @@ class Alarms {
     }
 
     import(file) {
-        const alarms = require('.' + file);
+        console.log('Loading Alarms from ', file)
+        const alarms = require(file);
         alarms.forEach((alarm) => { this.addAlarm(alarm)})
+        console.log(`Loaded ${alarms.length}x Alarms from `, file)
     }
 
     addAlarm(alarm) {
