@@ -28,7 +28,7 @@ const bot = new Bot(gather)
 const Alarms = require('./modules/alarms')
 const alarm = new Alarms(gather, '0001')
 alarm.setBot(bot)
-alarm.import(`../${process.env.CONFIG_PATH || '.'}alarms.json`)
+alarm.import(`${process.env.CONFIG_PATH || './'}alarms.json`)
 app.use('/alarms', alarm.router)
 console.log(`Alarm at /alarms/0001`)
 

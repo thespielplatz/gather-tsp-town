@@ -5,6 +5,7 @@ const StormDB = require("stormdb");
 
 const STORMDB_FILE = `${process.env.DATA_PATH || './'}db.stormdb`
 
+console.log(`Opening StormDB File at ${STORMDB_FILE}`)
 const engine = new StormDB.localFileEngine(STORMDB_FILE);
 const db = new StormDB(engine);
 
