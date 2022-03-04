@@ -7,6 +7,8 @@ class Alarms {
     constructor(gather, alarmId) {
         const self = this
 
+        this.alarmId = alarmId
+
         this.gather = gather
         this.alarms = []
 
@@ -80,7 +82,7 @@ class Alarms {
             console.log(`Sending: ${alarm.name}`)
             if (self.bot) self.bot.say("GLOBAL_CHAT", alarm.chat)
 
-            const players = db.get("alarms").get(alarmId).get(alarm.key).value()
+            const players = db.get("alarms").get(self.alarmId).get(alarm.key).value()
             Object.keys(players).forEach(playerId => {
                 if (players[playerId] == true) {
                     self.bot.say(playerId, alarm.chat)
