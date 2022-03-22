@@ -18,12 +18,11 @@ class Bot {
         this.gather = gather
 
         gather.game.subscribeToEvent("playerChats", (data, context) => {
-            if (data.playerChats.senderId == process.env.BOT_ID) return
-            //console.log(data)
+            if (data.playerChats.senderId === process.env.BOT_ID) return
 
             // Answer nearby players
-            if (data.playerChats.recipient == 'LOCAL_CHAT') {
-                gather.game.chat(data.playerChats.senderId, [], "", REPLY_MENU.replace('#name#', data.playerChats.senderName));
+            if (data.playerChats.recipient === 'LOCAL_CHAT') {
+                self.say(data.playerChats.senderId, REPLY_MENU.replace('#name#', data.playerChats.senderName))
                 return
             }
 
@@ -54,7 +53,7 @@ class Bot {
                     break
 
                 case '/givemeyourprivatekey':
-                    gather.game.chat("GLOBAL_CHAT", [], "", `Help me! ${data.playerChats.senderName} wants my private key`)
+                    self.say("GLOBAL_CHAT", `Help me! ${data.playerChats.senderName} wants my private key`)
                     gather.game.setEmote(3, process.env.BOT_ID)
                     setTimeout(() => { gather.game.setEmote(0, process.env.BOT_ID) }, 2000)
                     break
@@ -62,25 +61,24 @@ class Bot {
                 case '/blocktime':
                     axios.get(urlLastBlocks).then(result => {
                         const blocktime = result.data
-                        gather.game.chat(data.playerChats.senderId, [], "", `Current Block: ${blocktime}`)
+                        self.say(data.playerChats.senderId, `Current Block: ${blocktime}`)
                     })
                     break
 
                 default:
-                    gather.game.chat(data.playerChats.senderId, [], "", REPLY_MENU.replace('#name#', data.playerChats.senderName));
+                    self.say(data.playerChats.senderId, REPLY_MENU.replace('#name#', data.playerChats.senderName));
                     break
             }
         });
     }
 
     enter() {
-        this.gather.game.enter(process.env.GATHER_SPACE_ID)
-        if (process.env.DEV !== 'true') this.gather.game.chat("GLOBAL_CHAT", [], "", `Ready to serve! 😎 `)
+        this.gather.game.enter({ isNpc: true })
+        if (process.env.DEV !== 'true') this.say("GLOBAL_CHAT",`Ready to serve! 😎 `)
     }
 
     say(chatRecipient, text) {
-        console.log(chatRecipient)
-        this.gather.game.chat(chatRecipient, [], "", text)
+        this.gather.game.chat(chatRecipient, [], "", { contents: text })
     }
 }
 
